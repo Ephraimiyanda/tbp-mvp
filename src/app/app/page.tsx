@@ -23,6 +23,8 @@ function StudentHomeInner() {
   const [nextSession, setNextSession] = useState<SessionRow | null>(null);
   const [nuggets, setNuggets] = useState<(Nugget & { author?: string })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [demoPros, setDemoPros] = useState<{ profile_id: string; credentials: string | null; profiles?: { full_name: string } | null }[]>([]);
+  const [demoGroups, setDemoGroups] = useState<{ id: string; name: string; description: string | null }[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -31,13 +33,23 @@ function StudentHomeInner() {
       if (!auth.user) return;
       const { data: subs } = await supabase
         .from("subscriptions")
-        .select("*, profiles:professional_id(full_name)")
+        .select("*")
         .eq("student_id", auth.user.id)
         .eq("status", "active")
         .limit(1);
-      const row = subs?.[0] as (Subscription & { profiles?: { full_name: string } }) | undefined;
+      const row = subs?.[0] as Subscription | undefined;
       if (row) {
-        setSub({ ...row, professional: row.profiles });
+        const dir = await fetch("/api/directory");
+        let proName = "Your professional";
+        if (dir.ok) {
+          const json = (await dir.json()) as {
+            professionals?: { profile_id: string; profiles?: { full_name: string } | null }[];
+          };
+          proName =
+            json.professionals?.find((p) => p.profile_id === row.professional_id)?.profiles?.full_name ??
+            proName;
+        }
+        setSub({ ...row, professional: { full_name: proName } });
         const { data: plans } = await supabase
           .from("care_plans")
           .select("*")
@@ -54,16 +66,26 @@ function StudentHomeInner() {
         setNextSession((sessions?.[0] as SessionRow) ?? null);
         const { data: nuggetRows } = await supabase
           .from("nuggets")
-          .select("*, profiles:professional_id(full_name)")
+          .select("*")
           .eq("professional_id", row.professional_id)
           .order("created_at", { ascending: false })
           .limit(3);
         setNuggets(
-          ((nuggetRows ?? []) as (Nugget & { profiles?: { full_name: string } })[]).map((n) => ({
+          ((nuggetRows ?? []) as Nugget[]).map((n) => ({
             ...n,
-            author: n.profiles?.full_name,
+            author: proName,
           })),
         );
+      } else {
+        const res = await fetch("/api/directory");
+        if (res.ok) {
+          const json = (await res.json()) as {
+            professionals?: typeof demoPros;
+            groups?: typeof demoGroups;
+          };
+          setDemoPros((json.professionals ?? []).slice(0, 3));
+          setDemoGroups((json.groups ?? []).slice(0, 3));
+        }
       }
       setLoading(false);
     })();
@@ -73,26 +95,63 @@ function StudentHomeInner() {
 
   if (!sub) {
     return (
-      <div className="grid items-center gap-8 md:grid-cols-[1fr_0.7fr]">
-        <div>
-          <h1 className="font-display text-3xl">Start with a match</h1>
-          <p className="mt-2 max-w-xl text-muted">
-            You’ll see a professional first, then pay to subscribe. Care does not begin until payment
-            succeeds.
-          </p>
-          <Link
-            href="/app/match"
-            className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft"
-          >
-            See a professional
-          </Link>
-          <Link href="/app/groups" className="ml-4 text-sm font-semibold text-navy underline">
-            Browse peer communities
-          </Link>
+      <div className="space-y-10">
+        <div className="grid items-center gap-8 md:grid-cols-[1fr_0.7fr]">
+          <div>
+            <h1 className="font-display text-3xl">Start with a match</h1>
+            <p className="mt-2 max-w-xl text-muted">
+              You’ll see a professional first, then pay to subscribe. Care does not begin until payment
+              succeeds.
+            </p>
+            <Link
+              href="/app/match"
+              className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft"
+            >
+              See a professional
+            </Link>
+            <Link href="/app/groups" className="ml-4 text-sm font-semibold text-navy underline">
+              Browse peer communities
+            </Link>
+          </div>
+          <div className="mx-auto w-full max-w-xs">
+            <HeroMatch />
+          </div>
         </div>
-        <div className="mx-auto w-full max-w-xs">
-          <HeroMatch />
-        </div>
+        {demoPros.length || demoGroups.length ? (
+          <section className="space-y-6">
+            {demoPros.length ? (
+              <div>
+                <h2 className="font-display text-2xl">Professionals ready to match</h2>
+                <p className="mt-1 text-sm text-muted">Demo clinicians you can subscribe to after matching.</p>
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {demoPros.map((p) => (
+                    <Card key={p.profile_id}>
+                      <p className="font-display text-lg font-semibold">{p.profiles?.full_name ?? "Professional"}</p>
+                      <p className="mt-1 text-sm text-muted">{p.credentials}</p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {demoGroups.length ? (
+              <div>
+                <h2 className="font-display text-2xl">Peer communities</h2>
+                <p className="mt-1 text-sm text-muted">Join without a subscription.</p>
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {demoGroups.map((g) => (
+                    <Card key={g.id}>
+                      <p className="font-display text-lg font-semibold">{g.name}</p>
+                      <p className="mt-1 text-sm text-muted">{g.description}</p>
+                      <Link href={`/app/groups/${g.id}`} className="mt-3 inline-block text-sm font-semibold text-navy underline">
+                        Open
+                      </Link>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
       </div>
     );
   }

@@ -50,6 +50,8 @@ Or `POST /api/demo/seed`. Creates three professionals (password `DemoPass123!`),
 
 Also run `supabase/migrations/20260814_demo_sessions_pay.sql` in the SQL editor for chat sessions and mock payments.
 
+Also run `supabase/migrations/20260815_fix_rls_helpers.sql` so helper functions are `SECURITY DEFINER` (fixes stack-depth errors when loading professionals with names or group members).
+
 ## Product
 
 See [docs/MYALO.md](./docs/MYALO.md).

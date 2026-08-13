@@ -62,19 +62,33 @@ export function GetStartedClient() {
     void (async () => {
       let signedIn = false;
       try {
-        const { data } = await createClient().auth.getUser();
+        const supabase = createClient();
+        const { data } = await supabase.auth.getUser();
         signedIn = Boolean(data.user);
         setLoggedIn(signedIn);
+        if (data.user) {
+          const { data: intake } = await supabase
+            .from("intakes")
+            .select("id")
+            .eq("student_id", data.user.id)
+            .limit(1);
+          if (intake?.length) {
+            router.replace(intent === "peer" ? "/app/groups" : "/app");
+            return;
+          }
+        }
       } catch {
         setLoggedIn(false);
       } finally {
         const all: readonly StepId[] = intent === "peer" ? PEER_STEPS : STUDENT_STEPS;
+        // Preferences (and the rest of the questionnaire) only run during signup.
+        // Logged-in users finishing a partial signup skip the account step only.
         const visible = signedIn ? all.filter((s) => s !== "account") : all;
         setStep(firstIncomplete(visible, loaded, signedIn));
         setReady(true);
       }
     })();
-  }, [intent]);
+  }, [intent, router]);
 
   const visibleSteps = loggedIn ? steps.filter((s) => s !== "account") : steps;
   const current = (visibleSteps[step] ?? visibleSteps[0]) as StepId;
