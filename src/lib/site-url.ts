@@ -12,7 +12,7 @@ export function isLocalHost(value: string) {
 }
 
 /**
- * Public origin of the app (not used for confirm-email `redirect_to`).
+ * Public origin of the app.
  */
 export function getSiteUrl() {
   if (typeof window !== "undefined" && !isLocalHost(window.location.origin)) {
