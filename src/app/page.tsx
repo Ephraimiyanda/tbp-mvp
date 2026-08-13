@@ -7,6 +7,9 @@ import {
   PathIconIndividual,
   PathIconPeers,
   PathIconProfessional,
+  StatIconClick,
+  StatIconQuestions,
+  StatIconSubscribe,
   StepCalendar,
   StepPeers,
   StepQuestions,
@@ -69,16 +72,24 @@ export default function LandingPage() {
         <section className="bg-white">
           <div className="relative z-20 mx-auto max-w-6xl px-5 pt-8 md:pt-10">
             <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                { value: "8 questions", label: "During signup" },
-                { value: "Subscribe", label: "Before any session is booked" },
-                { value: "1 click", label: "To see another professional" },
-              ].map((s) => (
-                <div key={s.label} className="rounded-3xl bg-sky-soft px-6 py-8 text-center">
-                  <p className="font-display text-3xl font-light text-navy">{s.value}</p>
-                  <p className="mt-2 text-sm text-muted">{s.label}</p>
-                </div>
-              ))}
+              <StatCard
+                value="8 questions"
+                label="During signup"
+                icon={<StatIconQuestions className="h-10 w-10" />}
+                accent="from-[#eaf2fb] to-[#c9def5]"
+              />
+              <StatCard
+                value="Subscribe"
+                label="Before any session is booked"
+                icon={<StatIconSubscribe className="h-10 w-10" />}
+                accent="from-[#d7e8f8] to-[#7ba8d4]"
+              />
+              <StatCard
+                value="1 click"
+                label="To see another professional"
+                icon={<StatIconClick className="h-10 w-10" />}
+                accent="from-[#c9def5] to-[#2b6cb0]"
+              />
             </div>
           </div>
 
@@ -194,6 +205,32 @@ export default function LandingPage() {
         </section>
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function StatCard({
+  value,
+  label,
+  icon,
+  accent,
+}: {
+  value: string;
+  label: string;
+  icon: ReactNode;
+  accent: string;
+}) {
+  return (
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white p-5 text-left shadow-[0_12px_28px_rgba(8,31,74,0.14)] ring-1 ring-navy/5 transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_36px_rgba(8,31,74,0.22)] hover:ring-clay">
+      <span
+        className={`pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-gradient-to-br ${accent} opacity-70 transition duration-300 group-hover:scale-110 group-hover:opacity-95`}
+        aria-hidden
+      />
+      <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white/90 shadow-sm ring-1 ring-navy/5">
+        {icon}
+      </span>
+      <p className="relative mt-4 font-display text-3xl font-light leading-tight text-navy">{value}</p>
+      <p className="relative mt-2 text-sm leading-5 text-muted">{label}</p>
     </div>
   );
 }

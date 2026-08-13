@@ -154,3 +154,43 @@ export function PathIconProfessional({ className = "" }: { className?: string })
     </svg>
   );
 }
+
+export function StatIconQuestions({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <rect x="11" y="8" width="26" height="32" rx="6" fill="#ffffff" />
+      <rect x="17" y="14" width="14" height="3.5" rx="1.75" fill="#0b2e6b" />
+      <rect x="17" y="21" width="11" height="3.5" rx="1.75" fill="#2b6cb0" />
+      <rect x="17" y="28" width="8" height="3.5" rx="1.75" fill="#7ba8d4" />
+      <circle cx="34" cy="33" r="7" fill="#eaf2fb" />
+      <path d="M31 33 l2.2 2.2 4.4-4.4" fill="none" stroke="#0b2e6b" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function StatIconSubscribe({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <rect x="8" y="16" width="32" height="20" rx="6" fill="#ffffff" />
+      <rect x="8" y="16" width="32" height="7" rx="6" fill="#0b2e6b" />
+      <circle cx="16" cy="30" r="3" fill="#c9def5" />
+      <rect x="22" y="28" width="12" height="3" rx="1.5" fill="#7ba8d4" />
+      <path d="M24 10 l3.2 6.2 6.8.8-5 4.7 1.3 6.7L24 25.2 17.7 28.4 19 21.7 14 17l6.8-.8Z" fill="#2b6cb0" />
+    </svg>
+  );
+}
+
+export function StatIconClick({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <circle cx="17" cy="18" r="9" fill="#eaf2fb" />
+      <circle cx="17" cy="16" r="4.5" fill="#f3e6d8" />
+      <path d="M13 15c2.4-4.2 8-4.2 10.4 0" fill="#0b2e6b" />
+      <circle cx="33" cy="18" r="9" fill="#c9def5" />
+      <circle cx="33" cy="16" r="4.5" fill="#f7e4d4" />
+      <path d="M29 15c2.4-4.2 8-4.2 10.4 0" fill="#163e7a" />
+      <path d="M22 28 C 24 22, 28 22, 30 28" fill="none" stroke="#2b6cb0" strokeWidth="2" strokeLinecap="round" />
+      <path d="M28 34 l4 8 2.2-6.2L40 34 l-8-1.2Z" fill="#0b2e6b" />
+    </svg>
+  );
+}
