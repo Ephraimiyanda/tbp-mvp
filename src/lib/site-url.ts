@@ -1,4 +1,4 @@
-/** Live production origin for redirects and site-url fallbacks. */
+/** Live origin used in Supabase confirm-email `redirect_to`. */
 export const PRODUCTION_ORIGIN = "https://myola-health.vercel.app";
 
 /** True for loopback hosts that must never appear in production auth emails. */
@@ -13,7 +13,6 @@ export function isLocalHost(value: string) {
 
 /**
  * Public origin of the app.
- * Signup no longer uses email confirmation; this is for request origins and fallbacks.
  */
 export function getSiteUrl() {
   if (typeof window !== "undefined" && !isLocalHost(window.location.origin)) {
@@ -33,6 +32,15 @@ export function getSiteUrl() {
 
   if (explicit) return explicit;
   return PRODUCTION_ORIGIN;
+}
+
+/**
+ * Confirm-email `redirect_to`. Hardcoded so signup never writes localhost
+ * (or a preview URL) into the message. Add this exact URL in Supabase
+ * Authentication → URL configuration → Redirect URLs.
+ */
+export function emailRedirectUrl() {
+  return `${PRODUCTION_ORIGIN}/login`;
 }
 
 export function safeNextPath(next: string | null, fallback = "/app") {
