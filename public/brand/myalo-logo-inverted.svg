@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" role="img" aria-label="Myalo">
+  <rect x="0" y="4" width="32" height="32" rx="16" fill="#eaf2fb"/>
+  <text
+    x="16"
+    y="25.5"
+    text-anchor="middle"
+    font-family="Overpass, Georgia, 'Times New Roman', serif"
+    font-size="16"
+    font-weight="500"
+    fill="#0b2e6b"
+  >m</text>
+  <text
+    x="44"
+    y="27"
+    font-family="Overpass, Georgia, 'Times New Roman', serif"
+    font-size="22"
+    font-weight="400"
+    letter-spacing="-0.02em"
+    fill="#ffffff"
+  >myalo</text>
+</svg>
