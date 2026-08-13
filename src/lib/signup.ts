@@ -38,6 +38,7 @@ export async function signupWithoutEmailVerification(input: {
       password: input.password,
     });
     if (error) throw error;
+    await ensureProfileClient({ fullName: input.fullName, role: input.role });
     return supabase;
   }
 
@@ -64,7 +65,10 @@ async function clientSignupFallback(input: {
   });
   if (error) throw error;
 
-  if (data.session) return supabase;
+  if (data.session) {
+    await ensureProfileClient({ fullName: input.fullName, role: input.role });
+    return supabase;
+  }
 
   const { data: signedIn, error: signInError } = await supabase.auth.signInWithPassword({
     email: input.email,
@@ -73,5 +77,19 @@ async function clientSignupFallback(input: {
   if (signInError || !signedIn.session) {
     throw new Error(CONFIRM_HINT);
   }
+  await ensureProfileClient({ fullName: input.fullName, role: input.role });
   return supabase;
+}
+
+async function ensureProfileClient(input: { fullName: string; role: SignupRole }) {
+  const res = await fetch("/api/auth/ensure-profile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ full_name: input.fullName, role: input.role }),
+  });
+  if (res.ok) return;
+  const payload = (await res.json().catch(() => ({}))) as { error?: string };
+  // 503 = no service role; trigger may still have created the row.
+  if (res.status === 503) return;
+  throw new Error(payload.error || "Could not create profile");
 }

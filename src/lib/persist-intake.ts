@@ -1,11 +1,32 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { IntakeDraft } from "./intake-draft";
 
-export async function persistIntake(
+async function ensureStudentProfile(
   supabase: SupabaseClient,
   userId: string,
   draft: IntakeDraft,
 ) {
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (!existing) {
+    const res = await fetch("/api/auth/ensure-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name: draft.fullName,
+        role: "student",
+      }),
+    });
+    const payload = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) {
+      throw new Error(payload.error || "Could not create your profile. Try again.");
+    }
+  }
+
   const profileUpdate: Record<string, unknown> = {
     gender: draft.gender ?? null,
     university: draft.university ?? null,
@@ -18,8 +39,24 @@ export async function persistIntake(
     profileUpdate.chosen_name = name;
   }
 
-  const { error: profileError } = await supabase.from("profiles").update(profileUpdate).eq("id", userId);
+  const { data: updated, error: profileError } = await supabase
+    .from("profiles")
+    .update(profileUpdate)
+    .eq("id", userId)
+    .select("id")
+    .maybeSingle();
   if (profileError) throw profileError;
+  if (!updated) {
+    throw new Error("Profile was not found after signup. Try logging in again.");
+  }
+}
+
+export async function persistIntake(
+  supabase: SupabaseClient,
+  userId: string,
+  draft: IntakeDraft,
+) {
+  await ensureStudentProfile(supabase, userId, draft);
 
   const payload = {
     student_id: userId,

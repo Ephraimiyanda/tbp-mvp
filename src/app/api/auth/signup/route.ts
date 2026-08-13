@@ -8,6 +8,33 @@ type Body = {
   role?: "student" | "professional";
 };
 
+async function ensureProfile(
+  admin: ReturnType<typeof createAdminClient>,
+  userId: string,
+  email: string,
+  fullName: string,
+  role: "student" | "professional",
+) {
+  const { error: profileError } = await admin.from("profiles").upsert(
+    {
+      id: userId,
+      email,
+      full_name: fullName || email.split("@")[0] || "",
+      role,
+    },
+    { onConflict: "id" },
+  );
+  if (profileError) throw profileError;
+
+  if (role === "professional") {
+    const { error: proError } = await admin.from("professionals").upsert(
+      { profile_id: userId },
+      { onConflict: "profile_id" },
+    );
+    if (proError) throw proError;
+  }
+}
+
 export async function POST(request: Request) {
   let body: Body;
   try {
@@ -58,7 +85,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json({ id: data.user?.id, email });
+    const userId = data.user?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "User created without an id" }, { status: 500 });
+    }
+
+    // Trigger may be missing on some projects; create the row explicitly.
+    await ensureProfile(admin, userId, email, fullName, role);
+
+    return NextResponse.json({ id: userId, email });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Could not create account" },
