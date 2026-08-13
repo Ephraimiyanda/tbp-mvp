@@ -18,6 +18,7 @@ export default function MatchPage() {
     reasons: string[];
   } | null>(null);
   const [skipped, setSkipped] = useState<string[]>([]);
+  const [poolSize, setPoolSize] = useState(0);
 
   useEffect(() => {
     void load(skipped);
@@ -25,6 +26,7 @@ export default function MatchPage() {
 
   async function load(skip: string[]) {
     setLoading(true);
+    setError(null);
     const supabase = createClient();
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return;
@@ -42,8 +44,21 @@ export default function MatchPage() {
       return;
     }
     setHasIntake(true);
-    const { data: pros } = await supabase.from("professionals").select("*, profiles:profile_id(*)");
-    const list = ((pros ?? []) as Professional[]).filter((p) => !skip.includes(p.profile_id) && p.credentials);
+
+    const res = await fetch("/api/directory");
+    const json = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      professionals?: Professional[];
+    };
+    if (!res.ok) {
+      setError(json.error || "Could not load professionals");
+      setCandidate(null);
+      setLoading(false);
+      return;
+    }
+
+    const list = (json.professionals ?? []).filter((p) => !skip.includes(p.profile_id) && p.credentials);
+    setPoolSize(list.length);
     const ranked = rankProfessionals(intakeRow as Intake, list);
     const top = ranked[0];
     if (!top) {
@@ -85,15 +100,16 @@ export default function MatchPage() {
   if (!hasIntake) {
     return (
       <div className="mx-auto max-w-xl">
-        <h1 className="font-display text-3xl font-light">A few questions first</h1>
+        <h1 className="font-display text-3xl font-light">Finish signup first</h1>
         <p className="mt-2 text-sm text-muted">
-          Matching uses your answers. Finish the questionnaire, then we’ll show you a professional.
+          Matching uses the answers you give while creating your account. Complete signup once — we
+          won’t ask again.
         </p>
         <Link
           href="/signup"
           className="mt-6 inline-flex rounded-md bg-clay px-6 py-3 text-sm font-semibold text-navy"
         >
-          Get started
+          Continue signup
         </Link>
       </div>
     );
@@ -104,7 +120,7 @@ export default function MatchPage() {
       <div className="mx-auto max-w-xl">
         <h1 className="font-display text-3xl font-light">No professionals yet</h1>
         <p className="mt-2 text-sm text-muted">
-          Ask a clinician to sign up as a professional, then return here. You can still join a peer group.
+          Demo clinicians should appear here after seed. You can still join a peer group.
         </p>
         <Link href="/app/groups" className="mt-6 inline-block text-sm font-semibold text-navy underline">
           Browse groups
@@ -121,7 +137,8 @@ export default function MatchPage() {
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Your match is ready</p>
       <h1 className="font-display mt-2 text-4xl font-light">Meet {name.split(" ")[0]}</h1>
       <p className="mt-2 text-sm text-muted">
-        You can see this person before you subscribe. If it isn’t the right fit, see someone else.
+        You can see this person before you subscribe. If it isn’t the right fit, see someone else
+        {poolSize > 1 ? ` (${poolSize} available)` : ""}.
       </p>
       <Card className="mt-8 p-6">
         <div className="flex gap-4">

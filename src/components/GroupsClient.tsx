@@ -10,21 +10,33 @@ import { CONCERNS, type Checkin, type GroupMember, type GroupRow } from "@/lib/t
 export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
   const [groups, setGroups] = useState<(GroupRow & { count: number })[]>([]);
   const [mine, setMine] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabase = createClient();
     void (async () => {
-      const { data: auth } = await supabase.auth.getUser();
-      const { data } = await supabase.from("groups").select("*").order("created_at", { ascending: false });
-      const { data: members } = await supabase.from("group_members").select("group_id, profile_id");
-      const counts = new Map<string, number>();
-      const my = new Set<string>();
-      for (const m of members ?? []) {
-        counts.set(m.group_id, (counts.get(m.group_id) ?? 0) + 1);
-        if (m.profile_id === auth.user?.id) my.add(m.group_id);
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/directory");
+        const json = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          groups?: (GroupRow & { member_count?: number })[];
+          my_group_ids?: string[];
+        };
+        if (!res.ok) throw new Error(json.error || "Could not load groups");
+        setMine(json.my_group_ids ?? []);
+        setGroups(
+          (json.groups ?? []).map((g) => ({
+            ...g,
+            count: g.member_count ?? 0,
+          })),
+        );
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Could not load groups");
+      } finally {
+        setLoading(false);
       }
-      setMine([...my]);
-      setGroups(((data ?? []) as GroupRow[]).map((g) => ({ ...g, count: counts.get(g.id) ?? 0 })));
     })();
   }, []);
 
@@ -42,6 +54,11 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
           Create a group
         </Link>
       </div>
+      {error ? <p className="mt-6 text-sm text-danger">{error}</p> : null}
+      {loading ? <p className="mt-6 text-sm text-muted">Loading communities…</p> : null}
+      {!loading && !error && groups.length === 0 ? (
+        <p className="mt-6 text-sm text-muted">No communities yet. Create one, or ask an admin to run the demo seed.</p>
+      ) : null}
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         {groups.map((g) => (
           <Card key={g.id}>
@@ -144,24 +161,24 @@ export function GroupDetail({
   const [error, setError] = useState<string | null>(null);
 
   async function reload() {
-    const supabase = createClient();
-    const { data: auth } = await supabase.auth.getUser();
-    const { data: g } = await supabase.from("groups").select("*").eq("id", groupId).single();
-    setGroup(g as GroupRow);
-    const { data: m } = await supabase.from("group_members").select("*").eq("group_id", groupId);
-    const list = (m ?? []) as GroupMember[];
-    setMembers(list);
-    const me = list.find((row) => row.profile_id === auth.user?.id);
-    setMine(Boolean(me));
-    setAdmin(me?.role === "admin");
-    if (me) {
-      const { data: c } = await supabase
-        .from("group_checkins")
-        .select("*")
-        .eq("group_id", groupId)
-        .order("created_at", { ascending: true });
-      setCheckins((c as Checkin[]) ?? []);
+    const res = await fetch(`/api/groups/${groupId}`);
+    const json = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      group?: GroupRow;
+      members?: GroupMember[];
+      checkins?: Checkin[];
+      mine?: boolean;
+      admin?: boolean;
+    };
+    if (!res.ok) {
+      setError(json.error || "Could not load group");
+      return;
     }
+    setGroup(json.group ?? null);
+    setMembers(json.members ?? []);
+    setCheckins(json.checkins ?? []);
+    setMine(Boolean(json.mine));
+    setAdmin(Boolean(json.admin));
   }
 
   useEffect(() => {
@@ -171,37 +188,28 @@ export function GroupDetail({
 
   async function join() {
     setError(null);
-    const supabase = createClient();
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) return;
-    const { error: joinError } = await supabase.from("group_members").insert({
-      group_id: groupId,
-      profile_id: auth.user.id,
-      role: "member",
-    });
-    if (joinError) setError(joinError.message);
+    const res = await fetch(`/api/groups/${groupId}/join`, { method: "POST" });
+    const json = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) setError(json.error || "Could not join");
     else await reload();
   }
 
   async function checkin() {
     setError(null);
-    const supabase = createClient();
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) return;
-    const { error: cError } = await supabase.from("group_checkins").insert({
-      group_id: groupId,
-      profile_id: auth.user.id,
-      mood,
-      note: note || null,
+    const res = await fetch(`/api/groups/${groupId}/checkin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mood, note: note || null }),
     });
-    if (cError) setError(cError.message);
+    const json = (await res.json().catch(() => ({}))) as { error?: string };
+    if (!res.ok) setError(json.error || "Could not save check-in");
     else {
       setNote("");
       await reload();
     }
   }
 
-  if (!group) return <p className="text-muted">Loading…</p>;
+  if (!group) return <p className="text-muted">{error ?? "Loading…"}</p>;
 
   const growth = checkins.slice(-8);
 

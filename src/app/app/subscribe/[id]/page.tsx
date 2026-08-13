@@ -24,12 +24,16 @@ export default function SubscribePage() {
     void (async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
-      const { data: professional } = await supabase
-        .from("professionals")
-        .select("*, profiles:profile_id(*)")
-        .eq("profile_id", id)
-        .single();
-      setPro(professional as Professional);
+      const res = await fetch(`/api/directory/${id}`);
+      const json = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        professional?: Professional;
+      };
+      if (!res.ok || !json.professional) {
+        setError(json.error || "Professional not found");
+        return;
+      }
+      setPro(json.professional);
       const { data: intake } = await supabase
         .from("intakes")
         .select("*")
@@ -69,6 +73,7 @@ export default function SubscribePage() {
     }
   }
 
+  if (error && !pro) return <p className="text-danger">{error}</p>;
   if (!pro || !plan) return <p className="text-muted">Loading…</p>;
   const name = pro.profiles?.full_name ?? "Professional";
   const naira = (DEMO_PLAN_AMOUNT_KOBO / 100).toLocaleString("en-NG", {
