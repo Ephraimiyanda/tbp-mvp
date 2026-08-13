@@ -160,7 +160,7 @@ export function GetStartedClient() {
         password,
         options: {
           data: { full_name: fullName, role: "student" },
-          emailRedirectTo: authCallbackUrl("/matching"),
+          emailRedirectTo: authCallbackUrl(),
         },
       });
       if (signError) throw signError;

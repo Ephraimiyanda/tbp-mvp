@@ -45,7 +45,7 @@ function ProfessionalSignup() {
         password,
         options: {
           data: { full_name: fullName, role: "professional" },
-          emailRedirectTo: authCallbackUrl("/onboarding"),
+          emailRedirectTo: authCallbackUrl(),
         },
       });
       if (signError) throw signError;
