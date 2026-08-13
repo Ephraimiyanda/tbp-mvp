@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { FineWaves } from "@/components/WaveDivider";
+import { HeroMatch } from "@/components/illustrations";
 import { clearDraft, draftIsReady, loadDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -54,11 +56,14 @@ export default function MatchingPage() {
       <header className="mx-auto flex h-16 w-full max-w-3xl items-center px-5">
         <Logo inverted />
       </header>
-      <main className="flex flex-1 flex-col items-center justify-center px-5 pb-24 text-center">
-        <span className="myalo-pulse h-16 w-16 rounded-full bg-clay" />
-        <h1 className="font-display mt-8 text-3xl font-light">Matching you with a professional…</h1>
+      <main className="flex flex-1 flex-col items-center justify-center px-5 pb-16 text-center">
+        <div className="w-full max-w-sm">
+          <HeroMatch />
+        </div>
+        <h1 className="font-display mt-4 text-3xl font-light">Matching you with a professional…</h1>
         <p className="mt-3 max-w-md text-sm text-paper/75">{LINES[line]}</p>
       </main>
+      <FineWaves onDark />
     </div>
   );
 }

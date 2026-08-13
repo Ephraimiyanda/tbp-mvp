@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { MarketingHeader, SiteFooter } from "@/components/SiteChrome";
+import { FineWaves, WaveDivider } from "@/components/WaveDivider";
+import {
+  HeroConversation,
+  StepCalendar,
+  StepPeers,
+  StepQuestions,
+} from "@/components/illustrations";
 
 export default function LandingPage() {
   return (
@@ -7,7 +14,7 @@ export default function LandingPage() {
       <div className="bg-navy text-paper">
         <MarketingHeader />
         <section>
-          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-4 md:grid-cols-[1.15fr_0.85fr] md:pb-24">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-8 pt-4 md:grid-cols-[1.05fr_0.95fr] md:pb-4 md:pt-6">
             <div>
               <p className="text-sm font-medium tracking-wide text-clay">
                 Counseling and peer support for campus
@@ -25,24 +32,15 @@ export default function LandingPage() {
                 Sign up with a short questionnaire. Then a match you can see before you subscribe.
               </p>
             </div>
-            <div className="rounded-3xl bg-white/10 p-6 ring-1 ring-white/15">
-              <p className="text-xs uppercase tracking-[0.2em] text-clay">How matching feels</p>
-              <ul className="mt-5 space-y-4 text-paper/90">
-                {[
-                  "Answer a few questions while you create your account.",
-                  "See the professional before you subscribe.",
-                  "They schedule sessions; you join on Google Meet.",
-                  "Switch if it isn’t the right fit.",
-                ].map((line) => (
-                  <li key={line} className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-clay" />
-                    {line}
-                  </li>
-                ))}
-              </ul>
+            <div className="relative">
+              <HeroConversation />
+              <p className="mt-2 text-center text-xs tracking-wide text-paper/55">
+                A calm conversation, on your timeline.
+              </p>
             </div>
           </div>
         </section>
+        <WaveDivider tone="navy-to-mist" />
       </div>
 
       <main>
@@ -60,9 +58,10 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+        <WaveDivider tone="mist-to-white" />
 
         <section id="how" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="mx-auto max-w-6xl px-5 py-16">
             <p className="text-sm font-semibold text-ok">How it works</p>
             <h2 className="font-display mt-2 max-w-2xl text-4xl font-light text-navy">
               Get matched. Talk how you want. Come back between sessions.
@@ -73,32 +72,37 @@ export default function LandingPage() {
                   n: "1",
                   title: "Sign up by answering a few questions",
                   body: "Onboarding is the questionnaire. We cover what’s going on, how you like to talk, and optional identity preferences — then you create your account.",
+                  art: <StepQuestions className="h-16 w-24" />,
                 },
                 {
                   n: "2",
                   title: "Subscribe, then they schedule",
                   body: "Care starts when you opt in. Your professional books Google Meet sessions on a timeline that follows your presenting issue.",
+                  art: <StepCalendar className="h-16 w-24" />,
                 },
                 {
                   n: "3",
                   title: "Groups when campus hours aren’t",
                   body: "Join or create a peer group. Check in, track growth, and read nuggets from the professional you subscribe to.",
+                  art: <StepPeers className="h-16 w-24" />,
                 },
               ].map((step) => (
                 <article key={step.n} className="rounded-3xl bg-sky-soft p-6">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-sm font-semibold text-clay">
+                  {step.art}
+                  <span className="mt-3 flex h-9 w-9 items-center justify-center rounded-full bg-navy text-sm font-semibold text-clay">
                     {step.n}
                   </span>
-                  <h3 className="font-display mt-5 text-xl font-semibold text-navy">{step.title}</h3>
+                  <h3 className="font-display mt-4 text-xl font-semibold text-navy">{step.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-muted">{step.body}</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
+        <WaveDivider tone="white-to-mist" />
 
         <section className="bg-sky-soft">
-          <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="mx-auto max-w-6xl px-5 py-16">
             <h2 className="font-display text-3xl font-light text-navy">Myalo vs. the campus counseling center</h2>
             <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white">
               <table className="w-full min-w-[32rem] text-left text-sm">
@@ -128,9 +132,11 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        <WaveDivider tone="mist-to-white" />
 
         <section id="faq" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-3xl px-5 py-20">
+          <div className="mx-auto max-w-3xl px-5 py-16">
+            <FineWaves className="mb-10" />
             <h2 className="font-display text-3xl font-light text-navy">Frequently asked questions</h2>
             <dl className="mt-10 space-y-8">
               {[
@@ -165,6 +171,7 @@ export default function LandingPage() {
             </Link>
           </div>
         </section>
+        <WaveDivider tone="white-to-navy" />
       </main>
       <SiteFooter />
     </div>

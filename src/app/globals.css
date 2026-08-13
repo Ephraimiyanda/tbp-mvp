@@ -99,3 +99,25 @@ textarea {
 .myalo-pulse {
   animation: myalo-pulse 1.4s ease-in-out infinite;
 }
+
+@keyframes illu-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.illu-float {
+  animation: illu-float 5.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.illu-float-delayed {
+  animation: illu-float 6.2s ease-in-out 0.6s infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
