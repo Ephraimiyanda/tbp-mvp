@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
-import { authCallbackUrl } from "@/lib/site-url";
+import { emailRedirectUrl } from "@/lib/site-url";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 function SignupSwitch() {
@@ -45,7 +45,7 @@ function ProfessionalSignup() {
         password,
         options: {
           data: { full_name: fullName, role: "professional" },
-          emailRedirectTo: authCallbackUrl(),
+          emailRedirectTo: emailRedirectUrl(),
         },
       });
       if (signError) throw signError;
