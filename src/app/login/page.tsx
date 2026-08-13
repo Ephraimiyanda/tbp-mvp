@@ -39,7 +39,7 @@ function LoginForm() {
 
   return (
     <AuthShell>
-      <h1 className="font-display text-3xl font-light">Log in</h1>
+      <h1 className="font-display text-3xl font-light text-navy">Log in</h1>
       {params.get("checkemail") ? (
         <p className="mt-3 text-sm text-ok">Check your email to confirm the account, then log in.</p>
       ) : (
@@ -65,8 +65,8 @@ function LoginForm() {
       </form>
       <p className="mt-6 text-sm text-muted">
         New here?{" "}
-        <Link href="/get-started" className="font-semibold text-navy underline">
-          Get started
+        <Link href="/signup" className="font-semibold text-navy underline">
+          Sign up
         </Link>
         {" · "}
         <Link href="/signup?role=professional" className="font-semibold text-navy underline">

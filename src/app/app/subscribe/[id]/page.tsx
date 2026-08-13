@@ -121,7 +121,7 @@ export default function SubscribePage() {
       </Card>
       {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
       <div className="mt-8 flex items-center justify-between gap-4">
-        <Link href="/app/match" className="text-sm font-medium text-muted hover:text-ink">
+        <Link href="/app/match" className="cursor-pointer text-sm font-medium text-muted hover:text-navy">
           See someone else
         </Link>
         <PrimaryButton onClick={() => void subscribe()} disabled={busy}>

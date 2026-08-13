@@ -29,7 +29,7 @@ export function OnboardingClient() {
             .select("id")
             .eq("student_id", data.id)
             .limit(1);
-          router.replace(intake?.length ? "/app" : "/get-started");
+          router.replace(intake?.length ? "/app" : "/signup");
           return;
         }
         if (data?.role === "professional" && data.consented_at) {
@@ -161,14 +161,14 @@ function ProOnboarding({
 
 function Shell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-full flex-col bg-paper">
-      <header className="border-b border-line">
+    <div className="calm-wash flex min-h-full flex-col">
+      <header className="border-b border-line/70 bg-white/75 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-xl items-center justify-between px-5">
           <Logo />
           <p className="text-xs text-muted">Professional profile</p>
         </div>
         <div className="h-1 bg-line">
-          <div className="h-1 w-full bg-ok" />
+          <div className="progress-blend h-1 w-full" />
         </div>
       </header>
       <main className="mx-auto w-full max-w-xl flex-1 px-5 py-10">{children}</main>

@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 
 export default function CrisisPage() {
   return (
-    <div className="flex min-h-full flex-col bg-paper">
+    <div className="calm-wash flex min-h-full flex-col">
       <header className="border-b border-line">
         <div className="mx-auto flex h-14 max-w-2xl items-center px-5">
           <Logo />

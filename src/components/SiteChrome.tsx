@@ -4,24 +4,24 @@ import { Logo } from "./Logo";
 
 export function MarketingHeader() {
   return (
-    <header className="bg-navy text-paper">
+    <header className="border-b border-line/70 bg-white/80 text-ink backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Logo inverted />
+        <Logo />
         <nav className="flex items-center gap-6 text-sm">
-          <a href="#how" className="hidden text-paper/80 hover:text-paper md:inline">
+          <a href="#how" className="hidden cursor-pointer text-muted hover:text-navy md:inline">
             How it works
           </a>
-          <a href="#faq" className="hidden text-paper/80 hover:text-paper md:inline">
+          <a href="#faq" className="hidden cursor-pointer text-muted hover:text-navy md:inline">
             FAQ
           </a>
-          <Link href="/login" className="text-paper/80 hover:text-paper">
+          <Link href="/login" className="cursor-pointer text-muted hover:text-navy">
             Log in
           </Link>
           <Link
-            href="/get-started"
-            className="rounded-md bg-clay px-4 py-2 font-semibold text-navy hover:bg-white"
+            href="/signup"
+            className="cursor-pointer rounded-full bg-clay px-4 py-2 font-semibold text-navy hover:bg-sky-soft"
           >
-            Get started
+            Sign up
           </Link>
         </nav>
       </div>
@@ -33,12 +33,12 @@ export function SiteFooter() {
   return (
     <footer className="mt-auto bg-navy-soft text-paper/80">
       <div className="mx-auto max-w-6xl px-5 py-10">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm leading-6">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-6">
           <p className="font-semibold text-paper">If you are in crisis</p>
           <p className="mt-1">
             Myalo is not emergency care. Contact campus security, a university clinic, SURPIN
             (0800 038 3838 in Nigeria), or{" "}
-            <a className="text-clay underline" href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noreferrer">
+            <a className="cursor-pointer text-clay underline" href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noreferrer">
               IASP resources
             </a>
             .
@@ -52,8 +52,8 @@ export function SiteFooter() {
 
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-full flex-col bg-paper">
-      <header className="border-b border-line bg-paper">
+    <div className="calm-wash flex min-h-full flex-col">
+      <header className="border-b border-line/70 bg-white/70 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-md items-center px-5">
           <Logo />
         </div>

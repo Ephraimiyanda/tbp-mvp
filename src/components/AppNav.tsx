@@ -37,7 +37,7 @@ export function AppNav({
   }
 
   return (
-    <header className="border-b border-line bg-white">
+    <header className="border-b border-line/70 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-5 py-3">
         <Logo />
         <nav className="flex flex-1 flex-wrap gap-1">
@@ -47,7 +47,7 @@ export function AppNav({
               <Link
                 key={href}
                 href={href}
-                className={`rounded-full px-3 py-1.5 text-sm ${active ? "bg-navy text-paper" : "text-muted hover:text-ink"}`}
+                className={`cursor-pointer rounded-full px-3 py-1.5 text-sm ${active ? "bg-navy text-paper" : "text-muted hover:bg-sky-soft hover:text-navy"}`}
               >
                 {label}
               </Link>
@@ -55,7 +55,7 @@ export function AppNav({
           })}
         </nav>
         <span className="text-sm text-muted">{name}</span>
-        <button type="button" onClick={signOut} className="text-sm text-muted hover:text-ink">
+        <button type="button" onClick={signOut} className="cursor-pointer text-sm text-muted hover:text-navy">
           Log out
         </button>
       </div>

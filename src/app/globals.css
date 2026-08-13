@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #325343;
-  --navy-soft: #1e3e2e;
-  --paper: #fffcf6;
-  --clay: #a6de9b;
-  --clay-soft: #d8edd0;
-  --ink: #242624;
-  --muted: #4a4d4a;
-  --line: #dbdeda;
-  --danger: #8a2c21;
-  --ok: #397a4a;
+  --navy: #2a5f58;
+  --navy-soft: #1e4a46;
+  --paper: #f5faf8;
+  --clay: #9fd9cc;
+  --clay-soft: #d7f1ea;
+  --sky: #7eb8d4;
+  --sky-soft: #e7f4fa;
+  --ink: #1b3330;
+  --muted: #4e6864;
+  --line: #d4e5e0;
+  --danger: #b85c5c;
+  --ok: #3d8b7a;
 }
 
 @theme inline {
@@ -19,6 +21,8 @@
   --color-paper: var(--paper);
   --color-clay: var(--clay);
   --color-clay-soft: var(--clay-soft);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
@@ -45,9 +49,47 @@ h3,
   font-family: var(--font-overpass), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+a,
+button,
+[role="button"],
+label,
+select,
+summary,
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"] {
+  cursor: pointer;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+textarea {
+  cursor: text;
+}
+
+:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 ::selection {
   background: var(--clay);
   color: var(--navy);
+}
+
+.calm-wash {
+  background:
+    radial-gradient(1100px 520px at 8% -8%, rgba(159, 217, 204, 0.5), transparent 58%),
+    radial-gradient(900px 480px at 100% 0%, rgba(126, 184, 212, 0.38), transparent 52%),
+    radial-gradient(700px 400px at 50% 100%, rgba(215, 241, 234, 0.8), transparent 55%),
+    var(--paper);
+}
+
+.calm-hero {
+  background: linear-gradient(135deg, #1e4a46 0%, #2a5f58 48%, #2f6a7a 100%);
+}
+
+.progress-blend {
+  background: linear-gradient(90deg, var(--ok), var(--sky));
 }
 
 @keyframes myalo-pulse {

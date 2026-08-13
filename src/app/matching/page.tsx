@@ -35,7 +35,7 @@ export default function MatchingPage() {
             }
           }
         } catch {
-          // Match page sends the student back to get-started if intake is missing.
+          // Match page sends the student back to signup if intake is missing.
         }
       }
       const wait = Math.max(0, 2200 - (Date.now() - started));
@@ -50,14 +50,14 @@ export default function MatchingPage() {
   }, [router]);
 
   return (
-    <div className="flex min-h-full flex-col bg-navy text-paper">
+    <div className="calm-hero flex min-h-full flex-col text-paper">
       <header className="mx-auto flex h-16 w-full max-w-3xl items-center px-5">
         <Logo inverted />
       </header>
       <main className="flex flex-1 flex-col items-center justify-center px-5 pb-24 text-center">
         <span className="myalo-pulse h-16 w-16 rounded-full bg-clay" />
         <h1 className="font-display mt-8 text-3xl font-light">Matching you with a professional…</h1>
-        <p className="mt-3 max-w-md text-sm text-paper/70">{LINES[line]}</p>
+        <p className="mt-3 max-w-md text-sm text-paper/75">{LINES[line]}</p>
       </main>
     </div>
   );
