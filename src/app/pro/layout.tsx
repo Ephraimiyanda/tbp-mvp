@@ -22,7 +22,7 @@ export default async function ProLayout({
   if (!profile.consented_at) redirect("/onboarding");
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col bg-white">
       <AppNav role="professional" name={profile.full_name} />
       <div className="mx-auto w-full max-w-6xl flex-1 px-5 py-8">{children}</div>
     </div>

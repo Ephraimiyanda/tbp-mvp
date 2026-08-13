@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { MarketingHeader, SiteFooter } from "@/components/SiteChrome";
-import { WAVE_CLEAR, WaveEdge } from "@/components/WaveDivider";
+import { WaveJoin } from "@/components/WaveDivider";
 import {
   HeroConversation,
   PathIconIndividual,
@@ -17,7 +17,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-full flex-col bg-navy-soft">
+    <div className="flex min-h-full flex-col overflow-x-hidden bg-navy-soft">
       <div className="bg-navy text-paper">
         <MarketingHeader />
         <section>
@@ -65,12 +65,12 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <WaveEdge color="navy" />
       </div>
+      <WaveJoin from="navy" to="white" />
 
       <main className="flex-1">
         <section className="bg-white">
-          <div className="relative z-20 mx-auto max-w-6xl px-5 pt-8 md:pt-10">
+          <div className="mx-auto max-w-6xl px-5 pt-10 md:pt-12">
             <div className="grid gap-4 sm:grid-cols-3">
               <StatCard
                 value="8 questions"
@@ -130,11 +130,11 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-          <WaveEdge color="white" />
         </section>
+        <WaveJoin from="white" to="mist" variant={1} />
 
         <section className="bg-sky-soft">
-          <div className={`mx-auto max-w-6xl px-5 pb-16 ${WAVE_CLEAR}`}>
+          <div className="mx-auto max-w-6xl px-5 py-16">
             <h2 className="font-display text-3xl font-light text-navy">Myalo vs. the campus counseling center</h2>
             <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white">
               <table className="w-full min-w-[32rem] text-left text-sm">
@@ -163,11 +163,11 @@ export default function LandingPage() {
               </table>
             </div>
           </div>
-          <WaveEdge color="mist" />
         </section>
+        <WaveJoin from="mist" to="white" />
 
         <section id="faq" className="scroll-mt-20 bg-white">
-          <div className={`mx-auto max-w-3xl px-5 pb-16 ${WAVE_CLEAR}`}>
+          <div className="mx-auto max-w-3xl px-5 py-16">
             <h2 className="font-display text-3xl font-light text-navy">Frequently asked questions</h2>
             <dl className="mt-10 space-y-8">
               {[
@@ -201,9 +201,9 @@ export default function LandingPage() {
               Sign up
             </Link>
           </div>
-          <WaveEdge color="white" />
         </section>
       </main>
+      <WaveJoin from="white" to="navy-soft" variant={1} />
       <SiteFooter />
     </div>
   );
