@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { clearDraft, draftIsReady, loadDraft } from "@/lib/intake-draft";
@@ -16,6 +16,30 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const code = params.get("code");
+  const [confirming, setConfirming] = useState(Boolean(code));
+  const checkEmail = Boolean(params.get("checkemail"));
+
+  useEffect(() => {
+    if (!code || !isSupabaseConfigured()) {
+      setConfirming(false);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const supabase = createClient();
+        await supabase.auth.exchangeCodeForSession(code);
+        await supabase.auth.signOut();
+      } catch {
+        // Link already used or expired; they can still log in with the password.
+      }
+      if (!cancelled) router.replace("/login?checkemail=1");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [code, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,10 +72,26 @@ function LoginForm() {
     }
   }
 
+  if (confirming) {
+    return (
+      <AuthShell>
+        <h1 className="font-display text-3xl font-light text-navy">Email confirmed</h1>
+        <p className="mt-3 text-sm leading-6 text-muted">Finishing confirmation. You can log in next.</p>
+      </AuthShell>
+    );
+  }
+
   return (
     <AuthShell>
       <h1 className="font-display text-3xl font-light text-navy">Log in</h1>
-      <p className="mt-2 text-sm text-muted">Welcome back. Your match, groups, and sessions are here.</p>
+      {checkEmail ? (
+        <p className="mt-3 text-sm leading-6 text-ok">
+          Confirm the link we sent to your email, then log in here. Your questionnaire answers are
+          saved in this browser.
+        </p>
+      ) : (
+        <p className="mt-2 text-sm text-muted">Welcome back. Your match, groups, and sessions are here.</p>
+      )}
       <form onSubmit={onSubmit} className="mt-8 space-y-4 text-left">
         <Field label="Email">
           <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
