@@ -27,7 +27,7 @@ export function UniversitySelect({
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
-  const matches = useMemo(() => filterUniversities(query).slice(0, 12), [query]);
+  const matches = useMemo(() => filterUniversities(query), [query]);
   const exact = matches.some((name) => name.toLowerCase() === query.trim().toLowerCase());
 
   return (
@@ -51,8 +51,13 @@ export function UniversitySelect({
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-md"
+          className="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-md"
         >
+          {!query.trim() && matches.length > 0 ? (
+            <li className="px-4 py-1.5 text-xs text-muted">
+              {matches.length} NUC-recognised universities — type to filter
+            </li>
+          ) : null}
           {matches.map((name) => (
             <li key={name}>
               <button
@@ -85,9 +90,6 @@ export function UniversitySelect({
                 Use “{query.trim()}”
               </button>
             </li>
-          ) : null}
-          {matches.length === 0 && !query.trim() ? (
-            <li className="px-4 py-2.5 text-sm text-muted">Start typing to search</li>
           ) : null}
         </ul>
       ) : null}
