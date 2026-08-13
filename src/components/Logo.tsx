@@ -5,12 +5,12 @@ function WaterDrop({ className = "" }: { className?: string }) {
     <svg viewBox="0 0 24 24" className={className} aria-hidden>
       <path
         fill="currentColor"
-        d="M12 3.2C12 3.2 5.5 11.2 5.5 16a6.5 6.5 0 0 0 13 0c0-4.8-6.5-12.8-6.5-12.8Z"
+        d="M12 2.5C12 2.5 4.8 12.2 4.8 16.6a7.2 7.2 0 0 0 14.4 0C19.2 12.2 12 2.5 12 2.5Z"
       />
       <path
         fill="currentColor"
-        opacity="0.35"
-        d="M9.2 15.2c0-1.8 1.1-3.8 2-5.4-.2 2.1.4 4.2 1.8 5.6.9.9 1.4 2 1.4 3.2a4.3 4.3 0 0 1-5.2-3.4Z"
+        opacity="0.28"
+        d="M8.6 15.4c0-2.4 1.6-5.1 2.8-7.1-.4 2.6.5 5.1 2.4 6.8 1.1 1 1.7 2.2 1.7 3.5A5.2 5.2 0 0 1 8.6 15.4Z"
       />
     </svg>
   );
