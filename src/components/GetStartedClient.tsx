@@ -44,7 +44,6 @@ export function GetStartedClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
-  const [awaitingEmail, setAwaitingEmail] = useState(false);
 
   const steps = useMemo(
     () => (intent === "peer" ? PEER_STEPS : STUDENT_STEPS),
@@ -76,12 +75,6 @@ export function GetStartedClient() {
       }
     })();
   }, [intent]);
-
-  useEffect(() => {
-    if (!awaitingEmail) return;
-    const timer = window.setTimeout(() => router.replace("/login?checkemail=1"), 2800);
-    return () => window.clearTimeout(timer);
-  }, [awaitingEmail, router]);
 
   const visibleSteps = loggedIn ? steps.filter((s) => s !== "account") : steps;
   const current = (visibleSteps[step] ?? visibleSteps[0]) as StepId;
@@ -166,7 +159,8 @@ export function GetStartedClient() {
       if (signError) throw signError;
       const { data: session } = await supabase.auth.getSession();
       if (session.session) await supabase.auth.signOut();
-      setAwaitingEmail(true);
+      const q = email ? `?email=${encodeURIComponent(email)}` : "";
+      router.replace(`/check-email${q}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not finish onboarding");
     } finally {
@@ -178,23 +172,6 @@ export function GetStartedClient() {
     return (
       <div className="flex min-h-full flex-col bg-white">
         <FunnelBar progress={0} />
-      </div>
-    );
-  }
-
-  if (awaitingEmail) {
-    return (
-      <div className="flex min-h-full flex-col bg-white">
-        <FunnelBar progress={100} />
-        <main className="flex flex-1 flex-col items-center justify-center px-5 py-10 text-center">
-          <p className="text-xs font-medium uppercase tracking-wider text-ok">Almost there</p>
-          <h1 className="font-display mt-3 text-3xl font-light text-navy">Confirm your email</h1>
-          <p className="mt-3 max-w-md text-sm leading-6 text-muted">
-            We sent a confirmation link{email ? ` to ${email}` : ""}. Open it to finish creating your
-            account. Your answers are saved in this browser.
-          </p>
-          <p className="mt-6 text-sm text-muted">Taking you to log in…</p>
-        </main>
       </div>
     );
   }

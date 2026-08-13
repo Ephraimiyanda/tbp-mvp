@@ -18,9 +18,9 @@ Campus care: time-bounded therapy programmes and peer groups. Sessions use Googl
      http://localhost:3000/**
      ```
 
-4. Authentication → Email templates → **Confirm signup** must use `{{ .ConfirmationURL }}` (not `{{ .SiteURL }}`).
-
-5. Sign up **again** after saving those settings. Confirm emails already sent still contain the old `redirect_to=http://localhost:3000`.
+4. Authentication → Providers → Email → turn **Confirm email** **on**.
+5. Authentication → Email templates → **Confirm signup** must use `{{ .ConfirmationURL }}` (not `{{ .SiteURL }}`).
+6. Sign up **again** after saving those settings. Confirm emails already sent still contain the old `redirect_to`.
 
 Copy `.env.example` to `.env.local` for local work:
 
