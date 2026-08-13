@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/Ui";
+import { HeroMatch } from "@/components/illustrations";
 import { createClient } from "@/lib/supabase/client";
 import { CARE_PLANS, concernLabel, type CarePlan, type SessionRow, type Subscription } from "@/lib/types";
 
@@ -49,14 +50,19 @@ export default function StudentHome() {
 
   if (!sub) {
     return (
-      <div>
-        <h1 className="font-display text-3xl">Start with a match</h1>
-        <p className="mt-2 max-w-xl text-muted">
-          You’ll see a professional first, then subscribe. Care does not begin until you do.
-        </p>
-        <Link href="/app/match" className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft">
-          See a professional
-        </Link>
+      <div className="grid items-center gap-8 md:grid-cols-[1fr_0.7fr]">
+        <div>
+          <h1 className="font-display text-3xl">Start with a match</h1>
+          <p className="mt-2 max-w-xl text-muted">
+            You’ll see a professional first, then subscribe. Care does not begin until you do.
+          </p>
+          <Link href="/app/match" className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft">
+            See a professional
+          </Link>
+        </div>
+        <div className="mx-auto w-full max-w-xs">
+          <HeroMatch />
+        </div>
       </div>
     );
   }

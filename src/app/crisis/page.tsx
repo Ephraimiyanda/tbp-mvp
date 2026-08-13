@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteChrome";
 import { Logo } from "@/components/Logo";
+import { FineWaves } from "@/components/WaveDivider";
 
 export default function CrisisPage() {
   return (
@@ -10,6 +11,7 @@ export default function CrisisPage() {
           <Logo inverted />
         </div>
       </header>
+      <FineWaves />
       <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-12">
         <p className="text-sm font-semibold text-danger">Crisis resources</p>
         <h1 className="font-display mt-2 text-4xl font-light">

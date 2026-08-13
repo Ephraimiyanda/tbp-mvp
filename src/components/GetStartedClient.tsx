@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Field, OptionButton, PrimaryButton, TextInput } from "@/components/Ui";
 import { UniversitySelect } from "@/components/UniversitySelect";
+import { FineWaves } from "@/components/WaveDivider";
 import { emptyDraft, loadDraft, saveDraft, type IntakeDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -262,17 +263,20 @@ export function GetStartedClient() {
 
 function FunnelBar({ progress }: { progress: number }) {
   return (
-    <header className="bg-navy text-paper">
-      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
-        <Logo inverted />
-        <Link href="/login" className="cursor-pointer text-sm font-medium text-paper/80 hover:text-paper">
-          Log in
-        </Link>
-      </div>
-      <div className="h-1 w-full bg-navy-soft">
-        <div className="progress-blend h-1 transition-[width] duration-300" style={{ width: `${progress}%` }} />
-      </div>
-    </header>
+    <>
+      <header className="bg-navy text-paper">
+        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
+          <Logo inverted />
+          <Link href="/login" className="cursor-pointer text-sm font-medium text-paper/80 hover:text-paper">
+            Log in
+          </Link>
+        </div>
+        <div className="h-1 w-full bg-navy-soft">
+          <div className="progress-blend h-1 transition-[width] duration-300" style={{ width: `${progress}%` }} />
+        </div>
+      </header>
+      <FineWaves />
+    </>
   );
 }
 
