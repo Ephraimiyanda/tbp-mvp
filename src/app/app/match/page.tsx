@@ -90,7 +90,7 @@ export default function MatchPage() {
           Matching uses your answers. Finish the questionnaire, then we’ll show you a professional.
         </p>
         <Link
-          href="/get-started"
+          href="/signup"
           className="mt-6 inline-flex rounded-md bg-clay px-6 py-3 text-sm font-semibold text-navy"
         >
           Get started
@@ -147,7 +147,7 @@ export default function MatchPage() {
       <div className="mt-8 flex items-center justify-between gap-4">
         <button
           type="button"
-          className="text-sm font-medium text-muted hover:text-ink"
+          className="cursor-pointer text-sm font-medium text-muted hover:text-navy"
           onClick={() => setSkipped((s) => [...s, pro.profile_id])}
         >
           See someone else

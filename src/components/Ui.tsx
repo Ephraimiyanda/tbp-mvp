@@ -18,8 +18,10 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold transition ${
-        disabled ? "cursor-not-allowed bg-line text-muted" : "bg-clay text-navy hover:bg-[#b7e6ae]"
+      className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition ${
+        disabled
+          ? "cursor-not-allowed bg-line text-muted"
+          : "cursor-pointer bg-clay text-navy shadow-sm hover:bg-sky-soft hover:shadow-md"
       } ${className}`}
     >
       {children}
@@ -40,8 +42,10 @@ export function OptionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-lg border px-5 py-4 text-left transition ${
-        selected ? "border-navy bg-clay-soft ring-2 ring-navy/20" : "border-line bg-white hover:border-navy/40"
+      className={`w-full cursor-pointer rounded-2xl border px-5 py-4 text-left transition ${
+        selected
+          ? "border-navy bg-clay-soft ring-2 ring-sky/50"
+          : "border-line bg-white hover:border-sky hover:bg-sky-soft"
       }`}
     >
       {children}
@@ -57,7 +61,7 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block text-sm font-medium">
+    <label className="block cursor-pointer text-sm font-medium">
       {label}
       <div className="mt-2">{children}</div>
     </label>
@@ -68,7 +72,7 @@ export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none ring-clay/30 focus:ring-2 ${props.className ?? ""}`}
+      className={`w-full cursor-text rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none ring-sky/30 focus:border-sky focus:ring-2 ${props.className ?? ""}`}
     />
   );
 }
@@ -77,11 +81,11 @@ export function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className={`w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none ring-clay/30 focus:ring-2 ${props.className ?? ""}`}
+      className={`w-full cursor-text rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none ring-sky/30 focus:border-sky focus:ring-2 ${props.className ?? ""}`}
     />
   );
 }
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border border-line bg-white p-5 ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border border-line bg-white p-5 shadow-sm ${className}`}>{children}</div>;
 }

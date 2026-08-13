@@ -6,36 +6,36 @@ export default function LandingPage() {
     <div className="flex min-h-full flex-col">
       <MarketingHeader />
       <main>
-        <section className="bg-navy text-paper">
+        <section className="calm-wash">
           <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-24">
             <div>
-              <p className="text-sm font-medium tracking-wide text-clay">
+              <p className="text-sm font-medium tracking-wide text-ok">
                 Counseling and peer support for campus
               </p>
-              <h1 className="font-display mt-4 max-w-xl text-5xl font-light leading-[1.1] tracking-tight md:text-6xl">
+              <h1 className="font-display mt-4 max-w-xl text-5xl font-light leading-[1.1] tracking-tight text-navy md:text-6xl">
                 You deserve to feel okay here.
               </h1>
-              <p className="mt-8 text-lg text-paper/85">What kind of support are you looking for?</p>
+              <p className="mt-8 text-lg text-muted">What kind of support are you looking for?</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <PathCard href="/get-started" title="Individual" subtitle="Counseling for me" />
-                <PathCard href="/get-started?intent=peer" title="Peer support" subtitle="With other students" />
+                <PathCard href="/signup" title="Individual" subtitle="Counseling for me" />
+                <PathCard href="/signup?intent=peer" title="Peer support" subtitle="With other students" />
                 <PathCard href="/signup?role=professional" title="Professional" subtitle="I provide care" />
               </div>
-              <p className="mt-6 text-sm text-paper/60">
-                Short questionnaire. Then a match you can see before you subscribe.
+              <p className="mt-6 text-sm text-muted">
+                Sign up with a short questionnaire. Then a match you can see before you subscribe.
               </p>
             </div>
-            <div className="rounded-2xl bg-navy-soft p-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-clay">How matching feels</p>
-              <ul className="mt-5 space-y-4 text-paper/90">
+            <div className="rounded-3xl bg-white/80 p-6 shadow-sm ring-1 ring-line">
+              <p className="text-xs uppercase tracking-[0.2em] text-ok">How matching feels</p>
+              <ul className="mt-5 space-y-4 text-ink">
                 {[
-                  "Answer a few questions — one screen at a time.",
+                  "Answer a few questions while you create your account.",
                   "See the professional before you subscribe.",
                   "They schedule sessions; you join on Google Meet.",
                   "Switch if it isn’t the right fit.",
                 ].map((line) => (
                   <li key={line} className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-clay" />
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky" />
                     {line}
                   </li>
                 ))}
@@ -44,10 +44,10 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-navy-soft">
+        <section className="bg-navy text-paper">
           <div className="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-white/10 px-5 md:grid-cols-3 md:divide-x md:divide-y-0">
             {[
-              { value: "8 questions", label: "Typical intake" },
+              { value: "8 questions", label: "During signup" },
               { value: "Subscribe", label: "Before any session is booked" },
               { value: "1 click", label: "To see another professional" },
             ].map((s) => (
@@ -59,18 +59,18 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="how" className="scroll-mt-20 bg-paper">
+        <section id="how" className="scroll-mt-20 bg-white">
           <div className="mx-auto max-w-6xl px-5 py-20">
             <p className="text-sm font-semibold text-ok">How it works</p>
-            <h2 className="font-display mt-2 max-w-2xl text-4xl font-light">
+            <h2 className="font-display mt-2 max-w-2xl text-4xl font-light text-navy">
               Get matched. Talk how you want. Come back between sessions.
             </h2>
             <div className="mt-12 grid gap-8 md:grid-cols-3">
               {[
                 {
                   n: "1",
-                  title: "Get matched to a professional who fits",
-                  body: "A short questionnaire covers what’s going on, how you like to talk, and optional identity preferences. You see the person before you subscribe.",
+                  title: "Sign up by answering a few questions",
+                  body: "Onboarding is the questionnaire. We cover what’s going on, how you like to talk, and optional identity preferences — then you create your account.",
                 },
                 {
                   n: "2",
@@ -83,11 +83,11 @@ export default function LandingPage() {
                   body: "Join or create a peer group. Check in, track growth, and read nuggets from the professional you subscribe to.",
                 },
               ].map((step) => (
-                <article key={step.n} className="rounded-2xl bg-white p-6 ring-1 ring-line">
+                <article key={step.n} className="rounded-3xl bg-paper p-6 ring-1 ring-line">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-sm font-semibold text-clay">
                     {step.n}
                   </span>
-                  <h3 className="font-display mt-5 text-xl font-semibold">{step.title}</h3>
+                  <h3 className="font-display mt-5 text-xl font-semibold text-navy">{step.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-muted">{step.body}</p>
                 </article>
               ))}
@@ -95,10 +95,10 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-white">
+        <section className="calm-wash">
           <div className="mx-auto max-w-6xl px-5 py-20">
-            <h2 className="font-display text-3xl font-light">Myalo vs. the campus counseling center</h2>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-line">
+            <h2 className="font-display text-3xl font-light text-navy">Myalo vs. the campus counseling center</h2>
+            <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white shadow-sm">
               <table className="w-full min-w-[32rem] text-left text-sm">
                 <thead className="bg-navy text-paper">
                   <tr>
@@ -127,9 +127,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="faq" className="scroll-mt-20 bg-paper">
+        <section id="faq" className="scroll-mt-20 bg-white">
           <div className="mx-auto max-w-3xl px-5 py-20">
-            <h2 className="font-display text-3xl font-light">Frequently asked questions</h2>
+            <h2 className="font-display text-3xl font-light text-navy">Frequently asked questions</h2>
             <dl className="mt-10 space-y-8">
               {[
                 {
@@ -142,7 +142,7 @@ export default function LandingPage() {
                 },
                 {
                   q: "When do I create an account?",
-                  a: "After the questionnaire, the same pattern as large online-care funnels: questions first, account at the end, then a match.",
+                  a: "At the end of signup. The questionnaire is the onboarding — a few questions, then your name, email, and password.",
                 },
                 {
                   q: "Is this therapy?",
@@ -150,16 +150,16 @@ export default function LandingPage() {
                 },
               ].map((f) => (
                 <div key={f.q}>
-                  <dt className="font-semibold">{f.q}</dt>
+                  <dt className="font-semibold text-navy">{f.q}</dt>
                   <dd className="mt-2 text-sm leading-6 text-muted">{f.a}</dd>
                 </div>
               ))}
             </dl>
             <Link
-              href="/get-started"
-              className="mt-10 inline-flex rounded-md bg-navy px-6 py-3 text-sm font-semibold text-paper"
+              href="/signup"
+              className="mt-10 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft"
             >
-              Get started
+              Sign up
             </Link>
           </div>
         </section>
@@ -179,8 +179,11 @@ function PathCard({
   subtitle: string;
 }) {
   return (
-    <Link href={href} className="rounded-xl bg-paper px-4 py-4 text-ink transition hover:bg-clay">
-      <span className="block font-display text-lg font-semibold">{title}</span>
+    <Link
+      href={href}
+      className="cursor-pointer rounded-2xl bg-white px-4 py-4 text-ink shadow-sm ring-1 ring-line transition hover:bg-clay-soft hover:ring-sky"
+    >
+      <span className="block font-display text-lg font-semibold text-navy">{title}</span>
       <span className="mt-1 block text-sm text-muted">{subtitle}</span>
     </Link>
   );

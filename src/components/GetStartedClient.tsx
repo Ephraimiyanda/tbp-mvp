@@ -172,18 +172,18 @@ export function GetStartedClient() {
 
   if (!ready) {
     return (
-      <div className="flex min-h-full flex-col bg-paper">
+      <div className="calm-wash flex min-h-full flex-col">
         <FunnelBar progress={0} />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-full flex-col bg-paper">
+    <div className="calm-wash flex min-h-full flex-col">
       <FunnelBar progress={((step + 1) / total) * 100} />
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 py-10">
         <p className="text-xs font-medium uppercase tracking-wider text-ok">
-          {intent === "peer" ? "Peer support" : "Individual counseling"} · {step + 1} of {total}
+          {intent === "peer" ? "Peer support signup" : "Student signup"} · {step + 1} of {total}
         </p>
         <StepBody
           step={current}
@@ -200,7 +200,11 @@ export function GetStartedClient() {
         {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
         <div className="mt-8 flex items-center justify-between">
           {step > 0 ? (
-            <button type="button" className="text-sm font-medium text-muted" onClick={() => setStep((n) => n - 1)}>
+            <button
+              type="button"
+              className="cursor-pointer text-sm font-medium text-muted hover:text-navy"
+              onClick={() => setStep((n) => n - 1)}
+            >
               Back
             </button>
           ) : (
@@ -232,15 +236,15 @@ export function GetStartedClient() {
 
 function FunnelBar({ progress }: { progress: number }) {
   return (
-    <header className="border-b border-line bg-paper">
+    <header className="border-b border-line/70 bg-white/75 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
         <Logo />
-        <Link href="/login" className="text-sm font-medium text-muted hover:text-ink">
+        <Link href="/login" className="cursor-pointer text-sm font-medium text-muted hover:text-navy">
           Log in
         </Link>
       </div>
       <div className="h-1 w-full bg-line">
-        <div className="h-1 bg-ok transition-[width] duration-300" style={{ width: `${progress}%` }} />
+        <div className="progress-blend h-1 transition-[width] duration-300" style={{ width: `${progress}%` }} />
       </div>
     </header>
   );
@@ -307,7 +311,7 @@ function StepBody({
     case "gender":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">How do you identify?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">How do you identify?</h1>
           <p className="mt-2 text-sm text-muted">
             We ask so we can honor a gender preference for your professional if you have one.
           </p>
@@ -328,7 +332,7 @@ function StepBody({
     case "year":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">What year are you?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">What year are you?</h1>
           <p className="mt-2 text-sm text-muted">Campus stand-in for an age question — year of study is more useful here.</p>
           <div className="mt-6 grid gap-3">
             {["100-level", "200-level", "300-level", "400-level", "Postgraduate"].map((y) => (
@@ -342,7 +346,7 @@ function StepBody({
     case "concerns":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">What’s going on?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">What’s going on?</h1>
           <p className="mt-2 text-sm text-muted">Pick as many as you need. This sets your care-plan length.</p>
           <div className="mt-6 grid gap-3">
             {CONCERNS.map((c) => (
@@ -372,7 +376,7 @@ function StepBody({
     case "prior":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">Have you been in counseling before?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">Have you been in counseling before?</h1>
           <div className="mt-6 grid gap-3">
             {[
               ["No — this would be new", "No — this would be new"],
@@ -389,7 +393,7 @@ function StepBody({
     case "style":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">What do you want from a professional?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">What do you want from a professional?</h1>
           <div className="mt-6 grid gap-3">
             {[
               ["listens", "Mostly listens and reflects"],
@@ -406,7 +410,7 @@ function StepBody({
     case "tone":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">Gentle or direct?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">Gentle or direct?</h1>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {["gentle", "direct"].map((t) => (
               <OptionButton key={t} selected={draft.tone === t} onClick={() => pick({ tone: t })}>
@@ -419,7 +423,7 @@ function StepBody({
     case "communication":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">How do you want to talk?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">How do you want to talk?</h1>
           <p className="mt-2 text-sm text-muted">
             Live sessions are Google Meet. Messaging and mix tell your professional how to pace the week.
           </p>
@@ -444,7 +448,7 @@ function StepBody({
     case "preferences":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">Any professional preferences?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">Any professional preferences?</h1>
           <p className="mt-2 text-sm text-muted">Optional. Skip if you don’t mind.</p>
           <p className="mt-6 text-sm font-medium">Gender</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
@@ -475,7 +479,7 @@ function StepBody({
     case "university":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">Which campus?</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">Which campus?</h1>
           <Field label="University">
             <TextInput
               value={draft.university ?? ""}
@@ -488,7 +492,7 @@ function StepBody({
     case "consent":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">What stays private</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">What stays private</h1>
           <p className="mt-3 text-sm leading-6 text-muted">
             Your intake, session notes, and Meet links are visible only to you and the professional you
             subscribe to. Platform operators are not granted that access. The exception is imminent
@@ -508,14 +512,13 @@ function StepBody({
     case "account":
       return (
         <>
-          <h1 className="font-display mt-3 text-3xl font-light">Create your account</h1>
+          <h1 className="font-display mt-3 text-3xl font-light text-navy">Create your account</h1>
           <p className="mt-2 text-sm text-muted">
-            Questions first, account last — so matching has something to work with. Use your school email
-            if you have one.
+            That’s the questionnaire done. Add your name and email to finish signing up.
           </p>
           <p className="mt-2 text-sm">
             Already have an account?{" "}
-            <Link href="/login?next=/get-started" className="font-semibold text-navy underline">
+            <Link href="/login?next=/signup" className="font-semibold text-navy underline">
               Log in
             </Link>
           </p>

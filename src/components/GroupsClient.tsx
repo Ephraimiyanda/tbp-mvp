@@ -38,7 +38,7 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
             check-ins stay personal.
           </p>
         </div>
-        <Link href={`${basePath}/groups/new`} className="rounded-full bg-navy px-4 py-2 text-sm font-semibold text-paper">
+        <Link href={`${basePath}/groups/new`} className="cursor-pointer rounded-full bg-navy px-4 py-2 text-sm font-semibold text-paper hover:bg-navy-soft">
           Create a group
         </Link>
       </div>
@@ -232,7 +232,7 @@ export function GroupDetail({
                   key={n}
                   type="button"
                   onClick={() => setMood(n)}
-                  className={`h-10 w-10 rounded-full text-sm ${mood === n ? "bg-navy text-paper" : "bg-line"}`}
+                  className={`h-10 w-10 cursor-pointer rounded-full text-sm ${mood === n ? "bg-navy text-paper" : "bg-sky-soft text-navy hover:bg-clay"}`}
                 >
                   {n}
                 </button>

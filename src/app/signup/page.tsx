@@ -3,16 +3,19 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import { GetStartedClient } from "@/components/GetStartedClient";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
-function SignupForm() {
-  const router = useRouter();
+function SignupSwitch() {
   const params = useSearchParams();
-  const [role, setRole] = useState<"student" | "professional">(
-    params.get("role") === "professional" ? "professional" : "student",
-  );
+  if (params.get("role") === "professional") return <ProfessionalSignup />;
+  return <GetStartedClient />;
+}
+
+function ProfessionalSignup() {
+  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,15 +36,13 @@ function SignupForm() {
         email,
         password,
         options: {
-          data: { full_name: fullName, role },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=${
-            role === "professional" ? "/onboarding" : "/get-started"
-          }`,
+          data: { full_name: fullName, role: "professional" },
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
         },
       });
       if (signError) throw signError;
       const { data } = await supabase.auth.getSession();
-      if (data.session) router.push(role === "professional" ? "/onboarding" : "/get-started");
+      if (data.session) router.push("/onboarding");
       else router.push("/login?checkemail=1");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign up");
@@ -52,36 +53,12 @@ function SignupForm() {
 
   return (
     <AuthShell>
-      <h1 className="font-display text-3xl font-light">
-        {role === "professional" ? "Join as a professional" : "Create an account"}
-      </h1>
+      <h1 className="font-display text-3xl font-light text-navy">Join as a professional</h1>
       <p className="mt-2 text-sm leading-6 text-muted">
-        {role === "professional"
-          ? "Create your account, then finish a short profile. Students see you after they complete intake and subscribe."
-          : "Students usually start with a few questions first — it only takes a couple of minutes."}
+        Create your account, then finish a short profile. Students see you after they complete intake
+        and subscribe.
       </p>
-      {role === "student" ? (
-        <p className="mt-3 text-sm">
-          <Link className="font-semibold text-navy underline" href="/get-started">
-            Start the questionnaire instead
-          </Link>
-        </p>
-      ) : null}
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
-        <div className="grid grid-cols-2 gap-2">
-          {(["student", "professional"] as const).map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => setRole(r)}
-              className={`rounded-full px-3 py-2 text-sm capitalize ${
-                role === r ? "bg-navy text-paper" : "border border-line bg-white text-ink"
-              }`}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
         <Field label="Full name">
           <TextInput value={fullName} onChange={(e) => setFullName(e.target.value)} required autoComplete="name" />
         </Field>
@@ -104,7 +81,11 @@ function SignupForm() {
         </PrimaryButton>
       </form>
       <p className="mt-6 text-sm text-muted">
-        Already have an account?{" "}
+        Students sign up through the questionnaire.{" "}
+        <Link href="/signup" className="font-semibold text-navy underline">
+          Student signup
+        </Link>
+        {" · "}
         <Link href="/login" className="font-semibold text-navy underline">
           Log in
         </Link>
@@ -115,8 +96,12 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense>
-      <SignupForm />
+    <Suspense
+      fallback={
+        <div className="calm-wash min-h-full px-5 py-16 text-muted">Loading onboarding…</div>
+      }
+    >
+      <SignupSwitch />
     </Suspense>
   );
 }

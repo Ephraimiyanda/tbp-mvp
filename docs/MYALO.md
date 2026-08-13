@@ -14,7 +14,7 @@ This is not a clone of another therapy marketplace. Myalo’s wedge is the peer 
 ### Care (student ↔ professional)
 
 ```
-Get started (questions, one screen at a time) → account at the end
+Sign up / onboarding (questions, one screen at a time) → account at the end
         → matching animation → see the professional → subscribe
         → professional schedules sessions on a care-plan timeline
         → at session time Myalo releases a Google Meet link
