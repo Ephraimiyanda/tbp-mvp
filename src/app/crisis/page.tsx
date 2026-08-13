@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteChrome";
 import { Logo } from "@/components/Logo";
-import { FineWaves } from "@/components/WaveDivider";
+import { WAVE_CLEAR, WaveEdge } from "@/components/WaveDivider";
 
 export default function CrisisPage() {
   return (
@@ -10,9 +10,9 @@ export default function CrisisPage() {
         <div className="mx-auto flex h-14 max-w-2xl items-center px-5">
           <Logo inverted />
         </div>
+        <WaveEdge color="navy" />
       </header>
-      <FineWaves />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-12">
+      <main className={`mx-auto w-full max-w-2xl flex-1 px-5 pb-12 ${WAVE_CLEAR}`}>
         <p className="text-sm font-semibold text-danger">Crisis resources</p>
         <h1 className="font-display mt-2 text-4xl font-light">
           Myalo is not the right place if you are in crisis.
@@ -40,6 +40,7 @@ export default function CrisisPage() {
           Back to Myalo
         </Link>
       </main>
+      <WaveEdge color="white" />
       <SiteFooter />
     </div>
   );

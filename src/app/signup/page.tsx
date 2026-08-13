@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
-import { Logo } from "@/components/Logo";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { authCallbackUrl } from "@/lib/site-url";
@@ -62,20 +61,13 @@ function ProfessionalSignup() {
 
   if (awaitingEmail) {
     return (
-      <div className="flex min-h-full flex-col bg-white">
-        <header className="bg-navy text-paper">
-          <div className="mx-auto flex h-14 max-w-md items-center px-5">
-            <Logo inverted />
-          </div>
-        </header>
-        <main className="flex flex-1 flex-col items-center justify-center px-5 text-center">
-          <h1 className="font-display text-3xl font-light text-navy">Confirm your email</h1>
-          <p className="mt-3 max-w-md text-sm leading-6 text-muted">
-            We sent a confirmation link to {email}. Open it to finish creating your account.
-          </p>
-          <p className="mt-6 text-sm text-muted">Taking you to log in…</p>
-        </main>
-      </div>
+      <AuthShell>
+        <h1 className="font-display text-3xl font-light text-navy">Confirm your email</h1>
+        <p className="mt-3 max-w-md text-sm leading-6 text-muted">
+          We sent a confirmation link to {email}. Open it to finish creating your account.
+        </p>
+        <p className="mt-6 text-sm text-muted">Taking you to log in…</p>
+      </AuthShell>
     );
   }
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MarketingHeader, SiteFooter } from "@/components/SiteChrome";
-import { FineWaves, WaveDivider } from "@/components/WaveDivider";
+import { WAVE_CLEAR, WaveEdge } from "@/components/WaveDivider";
 import {
   HeroConversation,
   StepCalendar,
@@ -10,11 +10,11 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col bg-navy-soft">
       <div className="bg-navy text-paper">
         <MarketingHeader />
         <section>
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-8 pt-4 md:grid-cols-[1.05fr_0.95fr] md:pb-4 md:pt-6">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-10 pt-4 md:grid-cols-[1.05fr_0.95fr] md:pt-6">
             <div>
               <p className="text-sm font-medium tracking-wide text-clay">
                 Counseling and peer support for campus
@@ -40,28 +40,27 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <WaveDivider tone="navy-to-mist" />
+        <WaveEdge color="navy" />
       </div>
 
-      <main>
-        <section className="bg-sky-soft">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-navy/10 px-5 md:grid-cols-3 md:divide-x md:divide-y-0">
-            {[
-              { value: "8 questions", label: "During signup" },
-              { value: "Subscribe", label: "Before any session is booked" },
-              { value: "1 click", label: "To see another professional" },
-            ].map((s) => (
-              <div key={s.label} className="py-8 text-center">
-                <p className="font-display text-3xl font-light text-navy">{s.value}</p>
-                <p className="mt-2 text-sm text-muted">{s.label}</p>
-              </div>
-            ))}
+      <main className="flex-1">
+        <section className="bg-white">
+          <div className="relative z-20 mx-auto max-w-6xl px-5 pt-8 md:pt-10">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[
+                { value: "8 questions", label: "During signup" },
+                { value: "Subscribe", label: "Before any session is booked" },
+                { value: "1 click", label: "To see another professional" },
+              ].map((s) => (
+                <div key={s.label} className="rounded-3xl bg-sky-soft px-6 py-8 text-center">
+                  <p className="font-display text-3xl font-light text-navy">{s.value}</p>
+                  <p className="mt-2 text-sm text-muted">{s.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
-        <WaveDivider tone="mist-to-white" />
 
-        <section id="how" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-16">
+          <div id="how" className="scroll-mt-20 mx-auto max-w-6xl px-5 py-16">
             <p className="text-sm font-semibold text-ok">How it works</p>
             <h2 className="font-display mt-2 max-w-2xl text-4xl font-light text-navy">
               Get matched. Talk how you want. Come back between sessions.
@@ -98,11 +97,11 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+          <WaveEdge color="white" />
         </section>
-        <WaveDivider tone="white-to-mist" />
 
         <section className="bg-sky-soft">
-          <div className="mx-auto max-w-6xl px-5 py-16">
+          <div className={`mx-auto max-w-6xl px-5 pb-16 ${WAVE_CLEAR}`}>
             <h2 className="font-display text-3xl font-light text-navy">Myalo vs. the campus counseling center</h2>
             <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white">
               <table className="w-full min-w-[32rem] text-left text-sm">
@@ -131,12 +130,11 @@ export default function LandingPage() {
               </table>
             </div>
           </div>
+          <WaveEdge color="mist" />
         </section>
-        <WaveDivider tone="mist-to-white" />
 
         <section id="faq" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-3xl px-5 py-16">
-            <FineWaves className="mb-10" />
+          <div className={`mx-auto max-w-3xl px-5 pb-16 ${WAVE_CLEAR}`}>
             <h2 className="font-display text-3xl font-light text-navy">Frequently asked questions</h2>
             <dl className="mt-10 space-y-8">
               {[
@@ -170,8 +168,8 @@ export default function LandingPage() {
               Sign up
             </Link>
           </div>
+          <WaveEdge color="white" />
         </section>
-        <WaveDivider tone="white-to-navy" />
       </main>
       <SiteFooter />
     </div>

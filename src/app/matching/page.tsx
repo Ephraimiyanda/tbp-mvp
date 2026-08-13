@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
-import { FineWaves } from "@/components/WaveDivider";
 import { HeroMatch } from "@/components/illustrations";
 import { clearDraft, draftIsReady, loadDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
@@ -63,7 +62,6 @@ export default function MatchingPage() {
         <h1 className="font-display mt-4 text-3xl font-light">Matching you with a professional…</h1>
         <p className="mt-3 max-w-md text-sm text-paper/75">{LINES[line]}</p>
       </main>
-      <FineWaves onDark />
     </div>
   );
 }

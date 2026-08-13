@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Field, OptionButton, PrimaryButton, TextInput } from "@/components/Ui";
 import { UniversitySelect } from "@/components/UniversitySelect";
-import { FineWaves } from "@/components/WaveDivider";
+import { WAVE_CLEAR, WaveEdge } from "@/components/WaveDivider";
 import { emptyDraft, loadDraft, saveDraft, type IntakeDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
 import { authCallbackUrl } from "@/lib/site-url";
@@ -186,7 +186,7 @@ export function GetStartedClient() {
     return (
       <div className="flex min-h-full flex-col bg-white">
         <FunnelBar progress={100} />
-        <main className="flex flex-1 flex-col items-center justify-center px-5 text-center">
+        <main className={`flex flex-1 flex-col items-center justify-center px-5 text-center ${WAVE_CLEAR}`}>
           <p className="text-xs font-medium uppercase tracking-wider text-ok">Almost there</p>
           <h1 className="font-display mt-3 text-3xl font-light text-navy">Confirm your email</h1>
           <p className="mt-3 max-w-md text-sm leading-6 text-muted">
@@ -209,7 +209,7 @@ export function GetStartedClient() {
   return (
     <div className="flex min-h-full flex-col bg-white">
       <FunnelBar progress={((step + 1) / total) * 100} />
-      <main className="flex flex-1 flex-col items-center px-5 py-10">
+      <main className={`flex flex-1 flex-col items-center px-5 pb-10 ${WAVE_CLEAR}`}>
         <div className="my-auto flex w-full max-w-lg flex-col items-center text-center">
           <p className="text-xs font-medium uppercase tracking-wider text-ok">
             {intent === "peer" ? "Peer support signup" : "Student signup"} · {step + 1} of {total}
@@ -264,20 +264,20 @@ export function GetStartedClient() {
 
 function FunnelBar({ progress }: { progress: number }) {
   return (
-    <>
-      <header className="bg-navy text-paper">
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
-          <Logo inverted />
-          <Link href="/login" className="cursor-pointer text-sm font-medium text-paper/80 hover:text-paper">
-            Log in
-          </Link>
+    <header className="bg-navy text-paper">
+      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5">
+        <Logo inverted />
+        <Link href="/login" className="cursor-pointer text-sm font-medium text-paper/80 hover:text-paper">
+          Log in
+        </Link>
+      </div>
+      <div className="mx-auto max-w-3xl px-5 pb-3">
+        <div className="h-1 overflow-hidden rounded-full bg-white/15">
+          <div className="progress-blend h-1 rounded-full transition-[width] duration-300" style={{ width: `${progress}%` }} />
         </div>
-        <div className="h-1 w-full bg-navy-soft">
-          <div className="progress-blend h-1 transition-[width] duration-300" style={{ width: `${progress}%` }} />
-        </div>
-      </header>
-      <FineWaves />
-    </>
+      </div>
+      <WaveEdge color="navy" />
+    </header>
   );
 }
 
