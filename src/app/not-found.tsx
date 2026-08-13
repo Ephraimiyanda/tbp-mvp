@@ -3,11 +3,11 @@ import { Logo } from "@/components/Logo";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-full flex-col items-center justify-center bg-cream px-5">
+    <div className="flex min-h-full flex-col items-center justify-center bg-paper px-5">
       <Logo />
       <h1 className="font-display mt-8 text-3xl font-light">That page isn’t here.</h1>
-      <Link href="/" className="mt-4 text-sm font-semibold text-leaf-deep">
-        Back to TBP
+      <Link href="/" className="mt-4 text-sm font-semibold text-clay">
+        Back to Myalo
       </Link>
     </div>
   );

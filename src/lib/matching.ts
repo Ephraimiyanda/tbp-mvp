@@ -1,74 +1,42 @@
-import { counselors } from "./counselors";
-import type { SessionState } from "./types";
+import type { Intake, Professional } from "./types";
+import { concernLabel } from "./types";
 
-export function rankCounselors(session: SessionState) {
-  const skipped = new Set(session.skippedCounselorIds);
-
-  const scored = counselors
-    .filter((c) => !skipped.has(c.id))
-    .map((c) => {
+export function rankProfessionals(intake: Intake, professionals: Professional[]) {
+  return professionals
+    .map((pro) => {
       let score = 0;
-      for (const concern of session.concerns) {
-        if (concern === "crisis") continue;
-        if (c.specialties.includes(concern)) score += 3;
+      for (const concern of intake.concerns) {
+        if (pro.specialties.includes(concern)) score += 3;
       }
-      if (session.prefGender && session.prefGender !== "any") {
-        if (c.gender === session.prefGender) score += 4;
+      if (intake.pref_gender && intake.pref_gender !== "any") {
+        if (pro.gender === intake.pref_gender) score += 4;
         else score -= 8;
       }
-      if (session.lgbtqAffirming && c.lgbtqAffirming) score += 3;
-      if (session.lgbtqAffirming && !c.lgbtqAffirming) score -= 6;
-      if (session.faithSensitive && c.faithSensitive) score += 3;
-      if (session.tone && c.tone === session.tone) score += 1;
-      if (session.counselorStyle === "challenges" && c.tone === "direct") score += 1;
-      if (session.counselorStyle === "listens" && c.tone === "gentle") score += 1;
-      return { counselor: c, score };
+      if (intake.lgbtq_affirming && pro.lgbtq_affirming) score += 3;
+      if (intake.lgbtq_affirming && !pro.lgbtq_affirming) score -= 6;
+      if (intake.faith_sensitive && pro.faith_sensitive) score += 3;
+      if (intake.tone && pro.tone === intake.tone) score += 1;
+      if (intake.counselor_style === "challenges" && pro.tone === "direct") score += 1;
+      if (intake.counselor_style === "listens" && pro.tone === "gentle") score += 1;
+      return { professional: pro, score };
     })
     .sort((a, b) => b.score - a.score);
-
-  return scored.map((s) => s.counselor);
 }
 
-export function pickMatch(session: SessionState) {
-  return rankCounselors(session)[0] ?? null;
-}
-
-export function matchReasons(session: SessionState, counselorId: string) {
-  const counselor = counselors.find((c) => c.id === counselorId);
-  if (!counselor) return [];
+export function matchReasons(intake: Intake, pro: Professional) {
   const reasons: string[] = [];
-  const overlap = counselor.specialties.filter((s) => session.concerns.includes(s));
-  const labels: Record<string, string> = {
-    exams: "exam stress",
-    anxiety: "anxiety",
-    mood: "low mood",
-    homesickness: "homesickness",
-    relationships: "relationships",
-    identity: "identity",
-    grief: "grief",
-    sleep: "sleep",
-    firstgen: "first-gen pressure",
-  };
+  const overlap = pro.specialties.filter((s) => intake.concerns.includes(s));
   if (overlap.length) {
-    reasons.push(
-      `Works with ${overlap
-        .slice(0, 2)
-        .map((id) => labels[id] ?? id)
-        .join(" and ")}`,
-    );
+    reasons.push(`Works with ${overlap.slice(0, 2).map(concernLabel).join(" and ")}`);
   }
-  if (session.prefGender && session.prefGender !== "any" && counselor.gender === session.prefGender) {
-    reasons.push("Matches your counselor gender preference");
+  if (intake.pref_gender && intake.pref_gender !== "any" && pro.gender === intake.pref_gender) {
+    reasons.push("Matches your gender preference");
   }
-  if (session.lgbtqAffirming && counselor.lgbtqAffirming) {
-    reasons.push("LGBTQ+ affirming");
+  if (intake.lgbtq_affirming && pro.lgbtq_affirming) reasons.push("LGBTQ+ affirming");
+  if (intake.faith_sensitive && pro.faith_sensitive) reasons.push("Faith-sensitive");
+  if (intake.tone && pro.tone === intake.tone) {
+    reasons.push(pro.tone === "gentle" ? "A gentler style" : "A more direct style");
   }
-  if (session.faithSensitive && counselor.faithSensitive) {
-    reasons.push("Faith-sensitive when you want that");
-  }
-  if (session.tone && counselor.tone === session.tone) {
-    reasons.push(counselor.tone === "gentle" ? "A gentler style" : "A more direct style");
-  }
-  if (!reasons.length) reasons.push("Available in this prototype network and a solid starting fit");
+  if (!reasons.length) reasons.push("Available on Myalo and a solid starting fit");
   return reasons.slice(0, 3);
 }

@@ -1,71 +1,51 @@
 @import "tailwindcss";
 
 :root {
-  --forest: #325343;
-  --forest-deep: #1e3e2e;
-  --forest-dark: #0f2a1a;
-  --mint: #a6de9b;
-  --leaf: #5faa41;
-  --leaf-deep: #397a4a;
-  --cream: #fffcf6;
-  --sand: #f7f0e6;
-  --ink: #242624;
-  --muted: #4a4d4a;
-  --line: #dbdeda;
+  --navy: #141c2b;
+  --navy-soft: #1e2a40;
+  --paper: #f6f1ea;
+  --clay: #c46b4a;
+  --clay-soft: #f0d9ce;
+  --ink: #1c1917;
+  --muted: #5c574f;
+  --line: #e4ddd3;
   --danger: #8a2c21;
+  --ok: #3d6b4f;
 }
 
 @theme inline {
-  --color-forest: var(--forest);
-  --color-forest-deep: var(--forest-deep);
-  --color-forest-dark: var(--forest-dark);
-  --color-mint: var(--mint);
-  --color-leaf: var(--leaf);
-  --color-leaf-deep: var(--leaf-deep);
-  --color-cream: var(--cream);
-  --color-sand: var(--sand);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-paper: var(--paper);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-danger: var(--danger);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-overpass);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-fraunces);
 }
 
 html,
 body {
-  background: var(--cream);
+  background: var(--paper);
   color: var(--ink);
 }
 
 body {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 }
 
 h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-overpass), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
 ::selection {
-  background: var(--mint);
-  color: var(--forest);
-}
-
-@keyframes tbp-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
-}
-
-.tbp-pulse {
-  animation: tbp-pulse 1.4s ease-in-out infinite;
+  background: var(--clay-soft);
+  color: var(--navy);
 }
