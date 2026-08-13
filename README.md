@@ -38,6 +38,18 @@ Sign up once as a **student** (start at `/signup` — questionnaire during onboa
 
 Hobby Vercel cannot run frequent crons, so Myalo does not use a scheduler. When the student or professional taps **Join Google Meet** at session time, `/api/sessions/[id]/join` checks the clock, releases the stored URL, and opens Meet. Until then the link stays hidden in `session_meet_links`.
 
+## 4. Demo seed (live mock professionals + communities)
+
+With `SUPABASE_SERVICE_ROLE_KEY` set:
+
+```bash
+npm run seed:demo
+```
+
+Or `POST /api/demo/seed`. Creates three professionals (password `DemoPass123!`), their nuggets, and three peer communities.
+
+Also run `supabase/migrations/20260814_demo_sessions_pay.sql` in the SQL editor for chat sessions and mock payments.
+
 ## Product
 
 See [docs/MYALO.md](./docs/MYALO.md).
