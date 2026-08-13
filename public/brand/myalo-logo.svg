@@ -1,14 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" role="img" aria-label="Myalo">
   <rect x="0" y="4" width="32" height="32" rx="16" fill="#0b2e6b"/>
-  <text
-    x="16"
-    y="25.5"
-    text-anchor="middle"
-    font-family="Overpass, Georgia, 'Times New Roman', serif"
-    font-size="16"
-    font-weight="500"
+  <path
     fill="#eaf2fb"
-  >m</text>
+    d="M16 9
+       C16 9 8 18.5 8 23.2
+       C8 27.6 11.6 31 16 31
+       C20.4 31 24 27.6 24 23.2
+       C24 18.5 16 9 16 9Z"
+  />
+  <path
+    fill="#0b2e6b"
+    opacity="0.2"
+    d="M11.5 22.2
+       C11.5 19.4 13.6 16.2 15.2 14.2
+       C14.8 17.4 15.6 20.4 17.6 22.2
+       C18.8 23.3 19.4 24.6 19.4 26.1
+       C17 28.2 11.5 26.2 11.5 22.2Z"
+  />
   <text
     x="44"
     y="27"
