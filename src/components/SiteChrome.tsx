@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { FineWaves } from "./WaveDivider";
+import { WAVE_CLEAR, WaveEdge } from "./WaveDivider";
 import { HeroMatch } from "./illustrations";
 
 export function MarketingHeader() {
@@ -34,8 +34,7 @@ export function MarketingHeader() {
 export function SiteFooter() {
   return (
     <footer className="mt-auto bg-navy-soft text-paper/80">
-      <FineWaves onDark />
-      <div className="mx-auto max-w-6xl px-5 py-10">
+      <div className="mx-auto max-w-6xl px-5 pb-10 pt-24 md:pt-32">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-6">
           <p className="font-semibold text-paper">If you are in crisis</p>
           <p className="mt-1">
@@ -60,9 +59,9 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-14 max-w-md items-center px-5">
           <Logo inverted />
         </div>
-        <FineWaves onDark />
+        <WaveEdge color="navy" />
       </header>
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 py-10">
+      <main className={`mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-10 ${WAVE_CLEAR}`}>
         <div className="mb-4 w-44">
           <HeroMatch />
         </div>
