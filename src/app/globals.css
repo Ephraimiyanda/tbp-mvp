@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #141c2b;
-  --navy-soft: #1e2a40;
-  --paper: #f6f1ea;
-  --clay: #c46b4a;
-  --clay-soft: #f0d9ce;
-  --ink: #1c1917;
-  --muted: #5c574f;
-  --line: #e4ddd3;
+  --navy: #325343;
+  --navy-soft: #1e3e2e;
+  --paper: #fffcf6;
+  --clay: #a6de9b;
+  --clay-soft: #d8edd0;
+  --ink: #242624;
+  --muted: #4a4d4a;
+  --line: #dbdeda;
   --danger: #8a2c21;
-  --ok: #3d6b4f;
+  --ok: #397a4a;
 }
 
 @theme inline {
@@ -24,8 +24,8 @@
   --color-line: var(--line);
   --color-danger: var(--danger);
   --color-ok: var(--ok);
-  --font-sans: var(--font-figtree);
-  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-overpass);
 }
 
 html,
@@ -35,17 +35,33 @@ body {
 }
 
 body {
-  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-family: var(--font-overpass), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {
-  background: var(--clay-soft);
+  background: var(--clay);
   color: var(--navy);
+}
+
+@keyframes myalo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.myalo-pulse {
+  animation: myalo-pulse 1.4s ease-in-out infinite;
 }

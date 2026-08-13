@@ -17,9 +17,9 @@ export default async function StudentLayout({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  if (!profile) redirect("/onboarding");
+  if (!profile) redirect("/get-started");
   if (profile.role === "professional") redirect("/pro");
-  if (!profile.consented_at) redirect("/onboarding");
+  if (!profile.consented_at) redirect("/get-started");
 
   return (
     <div className="flex min-h-full flex-col">

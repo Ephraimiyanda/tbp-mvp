@@ -50,7 +50,7 @@ export function JoinMeetButton({
       <PrimaryButton onClick={join} disabled={busy || !open}>
         {busy ? "Opening…" : open ? "Join Google Meet" : `Opens ${formatRemaining(remaining)}`}
       </PrimaryButton>
-      {error ? <p className="mt-2 max-w-xs text-sm text-clay">{error}</p> : null}
+      {error ? <p className="mt-2 max-w-xs text-sm text-danger">{error}</p> : null}
     </div>
   );
 }

@@ -52,7 +52,7 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
               {g.count}/{g.member_cap} members
               {mine.includes(g.id) ? " · you’re in" : ""}
             </p>
-            <Link href={`${basePath}/groups/${g.id}`} className="mt-3 inline-block text-sm font-semibold text-clay">
+            <Link href={`${basePath}/groups/${g.id}`} className="mt-3 inline-block text-sm font-semibold text-navy">
               Open
             </Link>
           </Card>

@@ -34,7 +34,7 @@ export default function CrisisPage() {
             .
           </li>
         </ul>
-        <Link href="/" className="mt-8 inline-block font-semibold text-clay">
+        <Link href="/" className="mt-8 inline-block font-semibold text-navy">
           Back to Myalo
         </Link>
       </main>
