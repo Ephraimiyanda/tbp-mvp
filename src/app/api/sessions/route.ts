@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     duration_min?: number;
     meet_url?: string;
     notes_professional?: string;
+    modality?: "video" | "chat";
   };
 
   if (!body.student_id || !body.subscription_id || !body.scheduled_at) {
@@ -32,8 +33,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No active subscription" }, { status: 403 });
   }
 
+  const { data: intake } = await supabase
+    .from("intakes")
+    .select("communication")
+    .eq("student_id", sub.student_id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const modality: "video" | "chat" =
+    body.modality === "chat" || body.modality === "video"
+      ? body.modality
+      : intake?.communication === "message"
+        ? "chat"
+        : "video";
+
   const start = new Date(body.scheduled_at);
-  const duration = body.duration_min ?? 50;
+  const duration = body.duration_min ?? (modality === "chat" ? 40 : 50);
   const end = new Date(start.getTime() + duration * 60_000);
 
   const { data: session, error } = await supabase
@@ -44,6 +60,7 @@ export async function POST(request: Request) {
       professional_id: user.id,
       scheduled_at: start.toISOString(),
       duration_min: duration,
+      modality,
       notes_professional: body.notes_professional ?? null,
     })
     .select("id")
@@ -51,6 +68,10 @@ export async function POST(request: Request) {
 
   if (error || !session) {
     return NextResponse.json({ error: error?.message ?? "Could not schedule" }, { status: 400 });
+  }
+
+  if (modality === "chat") {
+    return NextResponse.json({ id: session.id, modality });
   }
 
   const { data: pro } = await supabase
@@ -81,7 +102,7 @@ export async function POST(request: Request) {
   if (!meetUrl) {
     await supabase.from("sessions").delete().eq("id", session.id);
     return NextResponse.json(
-      { error: "Add a Google Meet link (or connect Calendar) before scheduling." },
+      { error: "Add a Google Meet link (or connect Calendar) before scheduling a video session." },
       { status: 400 },
     );
   }
@@ -94,5 +115,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: linkError.message }, { status: 400 });
   }
 
-  return NextResponse.json({ id: session.id });
+  return NextResponse.json({ id: session.id, modality });
 }

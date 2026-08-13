@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PaystackMockCheckout } from "@/components/PaystackMockCheckout";
 import { Card, PrimaryButton } from "@/components/Ui";
+import { DEMO_PLAN_AMOUNT_KOBO } from "@/lib/demo-data";
 import { createClient } from "@/lib/supabase/client";
 import { concernLabel, initials, planForConcerns, type Intake, type Professional } from "@/lib/types";
 
@@ -12,8 +14,10 @@ export default function SubscribePage() {
   const router = useRouter();
   const [pro, setPro] = useState<Professional | null>(null);
   const [plan, setPlan] = useState<ReturnType<typeof planForConcerns> | null>(null);
+  const [communication, setCommunication] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -33,68 +37,55 @@ export default function SubscribePage() {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      if (intake) setPlan(planForConcerns((intake as Intake).concerns));
+      if (intake) {
+        const row = intake as Intake;
+        setPlan(planForConcerns(row.concerns));
+        setCommunication(row.communication);
+      }
     })();
   }, [id]);
 
-  async function subscribe() {
-    if (!pro || !plan) return;
+  async function completePayment(reference: string) {
     setBusy(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) throw new Error("Sign in required");
-      const { data: match } = await supabase
-        .from("matches")
-        .select("id")
-        .eq("student_id", auth.user.id)
-        .eq("professional_id", pro.profile_id)
-        .maybeSingle();
-      const { data: sub, error: subError } = await supabase
-        .from("subscriptions")
-        .upsert(
-          {
-            student_id: auth.user.id,
-            professional_id: pro.profile_id,
-            match_id: match?.id ?? null,
-            status: "active",
-            plan: "student",
-          },
-          { onConflict: "student_id,professional_id" },
-        )
-        .select("id")
-        .single();
-      if (subError || !sub) throw subError ?? new Error("Could not subscribe");
-      await supabase.from("matches").update({ status: "subscribed" }).eq("id", match?.id ?? "");
-      const { error: planError } = await supabase.from("care_plans").upsert(
-        {
-          subscription_id: sub.id,
-          primary_issue: plan.issue,
-          duration_weeks: plan.weeks,
-          session_target: plan.sessions,
-        },
-        { onConflict: "subscription_id" },
-      );
-      if (planError) throw planError;
-      router.push("/app");
+      const res = await fetch("/api/subscribe/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          professional_id: id,
+          reference,
+          amount_kobo: DEMO_PLAN_AMOUNT_KOBO,
+        }),
+      });
+      const json = (await res.json()) as { error?: string; modality?: string };
+      if (!res.ok) throw new Error(json.error || "Could not complete payment");
+      router.push(`/app?paid=1&modality=${json.modality ?? "video"}`);
+      router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not subscribe");
-    } finally {
+      setError(err instanceof Error ? err.message : "Could not complete payment");
       setBusy(false);
+      setCheckoutOpen(false);
     }
   }
 
   if (!pro || !plan) return <p className="text-muted">Loading…</p>;
   const name = pro.profiles?.full_name ?? "Professional";
+  const naira = (DEMO_PLAN_AMOUNT_KOBO / 100).toLocaleString("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  });
+  const sessionKind =
+    communication === "message" ? "Secure chat sessions" : communication === "mix" ? "Mix of chat and video" : "Google Meet video sessions";
 
   return (
     <div className="mx-auto max-w-xl">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Start care</p>
-      <h1 className="font-display mt-2 text-4xl font-light">Subscribe to begin this programme</h1>
+      <h1 className="font-display mt-2 text-4xl font-light">Pay to begin this programme</h1>
       <p className="mt-3 text-sm leading-6 text-muted">
-        Nothing is booked until you opt in. After you subscribe, {name.split(" ")[0]} schedules Google Meet
-        sessions on a timeline that follows what you shared.
+        After a successful payment, {name.split(" ")[0]} is reserved for you, your first session is scheduled,
+        and their nuggets unlock. This demo uses Paystack test mode — no real charge.
       </p>
       <Card className="mt-8 p-6">
         <div className="flex gap-4">
@@ -117,6 +108,14 @@ export default function SubscribePage() {
               {plan.weeks} weeks · {plan.sessions} sessions
             </dd>
           </div>
+          <div>
+            <dt className="text-muted">Format</dt>
+            <dd className="mt-1 font-medium">{sessionKind}</dd>
+          </div>
+          <div>
+            <dt className="text-muted">Student plan</dt>
+            <dd className="mt-1 font-medium">{naira}</dd>
+          </div>
         </dl>
       </Card>
       {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
@@ -124,10 +123,17 @@ export default function SubscribePage() {
         <Link href="/app/match" className="cursor-pointer text-sm font-medium text-muted hover:text-navy">
           See someone else
         </Link>
-        <PrimaryButton onClick={() => void subscribe()} disabled={busy}>
-          {busy ? "Starting…" : "Subscribe to the student plan"}
+        <PrimaryButton onClick={() => setCheckoutOpen(true)} disabled={busy}>
+          {busy ? "Confirming…" : `Pay ${naira} with Paystack`}
         </PrimaryButton>
       </div>
+      {checkoutOpen ? (
+        <PaystackMockCheckout
+          professionalName={name}
+          onCancel={() => setCheckoutOpen(false)}
+          onSuccess={completePayment}
+        />
+      ) : null}
     </div>
   );
 }

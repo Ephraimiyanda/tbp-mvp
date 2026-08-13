@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { JoinMeetButton } from "@/components/JoinMeetButton";
+import { JoinSessionButton } from "@/components/JoinSessionButton";
 import { Card, Field, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, SessionRow, Subscription } from "@/lib/types";
@@ -13,6 +13,7 @@ export default function ProSchedule() {
   const [when, setWhen] = useState("");
   const [meet, setMeet] = useState("");
   const [notes, setNotes] = useState("");
+  const [modality, setModality] = useState<"video" | "chat" | "auto">("auto");
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -62,12 +63,17 @@ export default function ProSchedule() {
         scheduled_at: new Date(when).toISOString(),
         meet_url: meet || undefined,
         notes_professional: notes || undefined,
+        modality: modality === "auto" ? undefined : modality,
       }),
     });
-    const json = (await res.json()) as { error?: string };
+    const json = (await res.json()) as { error?: string; modality?: string };
     if (!res.ok) setMessage(json.error ?? "Could not schedule");
     else {
-      setMessage("Session scheduled. The student will get the Meet link at that time.");
+      setMessage(
+        json.modality === "chat"
+          ? "Chat session scheduled. It opens for both of you at the scheduled time."
+          : "Session scheduled. The student will get the Meet link at that time.",
+      );
       setNotes("");
       await reload();
     }
@@ -98,12 +104,25 @@ export default function ProSchedule() {
               ))}
             </select>
           </Field>
+          <Field label="Session format">
+            <select
+              className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm"
+              value={modality}
+              onChange={(e) => setModality(e.target.value as "video" | "chat" | "auto")}
+            >
+              <option value="auto">Match student preference</option>
+              <option value="video">Google Meet video</option>
+              <option value="chat">Secure chat</option>
+            </select>
+          </Field>
           <Field label="Start">
             <TextInput type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} required />
           </Field>
-          <Field label="Google Meet URL (if Calendar is not connected)">
-            <TextInput value={meet} onChange={(e) => setMeet(e.target.value)} placeholder="https://meet.google.com/…" />
-          </Field>
+          {modality !== "chat" ? (
+            <Field label="Google Meet URL (if Calendar is not connected)">
+              <TextInput value={meet} onChange={(e) => setMeet(e.target.value)} placeholder="https://meet.google.com/…" />
+            </Field>
+          ) : null}
           <Field label="Private notes (only you see these)">
             <TextArea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </Field>
@@ -119,15 +138,18 @@ export default function ProSchedule() {
           {sessions.map((s) => (
             <Card key={s.id}>
               <p className="font-medium">{new Date(s.scheduled_at).toLocaleString()}</p>
-              <p className="text-sm text-muted">{s.duration_min} min</p>
+              <p className="text-sm text-muted">
+                {s.duration_min} min · {s.modality === "chat" ? "Chat" : "Google Meet"}
+              </p>
               {s.notes_professional ? (
                 <p className="mt-2 text-sm italic text-muted">Note: {s.notes_professional}</p>
               ) : null}
               <div className="mt-3">
-                <JoinMeetButton
+                <JoinSessionButton
                   sessionId={s.id}
                   scheduledAt={s.scheduled_at}
                   alreadyReleased={Boolean(s.meet_released_at)}
+                  modality={s.modality === "chat" ? "chat" : "video"}
                 />
               </div>
             </Card>

@@ -116,6 +116,7 @@ export type SessionRow = {
   scheduled_at: string;
   duration_min: number;
   status: "scheduled" | "released" | "completed" | "cancelled";
+  modality?: "video" | "chat";
   notes_professional: string | null;
   meet_released_at: string | null;
 };
