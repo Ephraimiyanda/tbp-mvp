@@ -37,9 +37,9 @@ export function AppNav({
   }
 
   return (
-    <header className="border-b border-line/70 bg-white/90 backdrop-blur">
+    <header className="bg-navy text-paper">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-5 py-3">
-        <Logo />
+        <Logo inverted />
         <nav className="flex flex-1 flex-wrap gap-1">
           {links.map(([href, label]) => {
             const active = path === href || (href !== "/app" && href !== "/pro" && path.startsWith(href));
@@ -47,15 +47,15 @@ export function AppNav({
               <Link
                 key={href}
                 href={href}
-                className={`cursor-pointer rounded-full px-3 py-1.5 text-sm ${active ? "bg-navy text-paper" : "text-muted hover:bg-sky-soft hover:text-navy"}`}
+                className={`cursor-pointer rounded-full px-3 py-1.5 text-sm ${active ? "bg-clay text-navy" : "text-paper/80 hover:bg-white/10 hover:text-paper"}`}
               >
                 {label}
               </Link>
             );
           })}
         </nav>
-        <span className="text-sm text-muted">{name}</span>
-        <button type="button" onClick={signOut} className="cursor-pointer text-sm text-muted hover:text-navy">
+        <span className="text-sm text-paper/70">{name}</span>
+        <button type="button" onClick={signOut} className="cursor-pointer text-sm text-paper/80 hover:text-paper">
           Log out
         </button>
       </div>

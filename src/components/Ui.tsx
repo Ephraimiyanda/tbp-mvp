@@ -21,7 +21,7 @@ export function PrimaryButton({
       className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition ${
         disabled
           ? "cursor-not-allowed bg-line text-muted"
-          : "cursor-pointer bg-clay text-navy shadow-sm hover:bg-sky-soft hover:shadow-md"
+          : "cursor-pointer bg-navy text-paper shadow-sm hover:bg-navy-soft"
       } ${className}`}
     >
       {children}
@@ -42,9 +42,9 @@ export function OptionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full cursor-pointer rounded-2xl border px-5 py-4 text-left transition ${
+      className={`w-full cursor-pointer rounded-2xl border px-5 py-4 text-center transition ${
         selected
-          ? "border-navy bg-clay-soft ring-2 ring-sky/50"
+          ? "border-navy bg-sky-soft ring-2 ring-navy/20"
           : "border-line bg-white hover:border-sky hover:bg-sky-soft"
       }`}
     >
@@ -61,7 +61,7 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block cursor-pointer text-sm font-medium">
+    <label className="block cursor-pointer text-left text-sm font-medium">
       {label}
       <div className="mt-2">{children}</div>
     </label>
