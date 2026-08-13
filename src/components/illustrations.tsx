@@ -114,3 +114,43 @@ export function StepPeers({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+
+export function PathIconIndividual({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <circle cx="20" cy="16" r="7" fill="#f3e6d8" />
+      <path d="M13 15c3-6 11-6 14 0" fill="#0b2e6b" />
+      <rect x="11" y="24" width="18" height="15" rx="7" fill="#2b6cb0" />
+      <rect x="28" y="8" width="14" height="11" rx="5.5" fill="#ffffff" />
+      <circle cx="32.5" cy="13.5" r="1.6" fill="#2b6cb0" />
+      <circle cx="37.5" cy="13.5" r="1.6" fill="#7ba8d4" />
+    </svg>
+  );
+}
+
+export function PathIconPeers({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <circle cx="18" cy="18" r="8" fill="#c9def5" />
+      <circle cx="18" cy="16" r="4" fill="#f3e6d8" />
+      <circle cx="31" cy="18" r="8" fill="#7ba8d4" />
+      <circle cx="31" cy="16" r="4" fill="#f7e4d4" />
+      <circle cx="24.5" cy="30" r="9" fill="#0b2e6b" />
+      <circle cx="24.5" cy="27" r="4.5" fill="#eaf2fb" />
+    </svg>
+  );
+}
+
+export function PathIconProfessional({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <rect x="12" y="10" width="24" height="28" rx="6" fill="#ffffff" />
+      <rect x="12" y="10" width="24" height="9" rx="6" fill="#0b2e6b" />
+      <rect x="18" y="7" width="12" height="6" rx="3" fill="#7ba8d4" />
+      <rect x="18" y="24" width="12" height="3" rx="1.5" fill="#c9def5" />
+      <rect x="18" y="30" width="8" height="3" rx="1.5" fill="#7ba8d4" />
+      <circle cx="30" cy="32" r="5" fill="#eaf2fb" />
+      <path d="M30 29.5 v5 M27.5 32 h5" stroke="#0b2e6b" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
