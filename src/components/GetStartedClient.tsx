@@ -9,6 +9,7 @@ import { UniversitySelect } from "@/components/UniversitySelect";
 import { FineWaves } from "@/components/WaveDivider";
 import { emptyDraft, loadDraft, saveDraft, type IntakeDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
+import { authCallbackUrl } from "@/lib/site-url";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { CONCERNS } from "@/lib/types";
 
@@ -159,7 +160,7 @@ export function GetStartedClient() {
         password,
         options: {
           data: { full_name: fullName, role: "student" },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/matching`,
+          emailRedirectTo: authCallbackUrl("/matching"),
         },
       });
       if (signError) throw signError;

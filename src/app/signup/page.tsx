@@ -7,6 +7,7 @@ import { GetStartedClient } from "@/components/GetStartedClient";
 import { Logo } from "@/components/Logo";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
+import { authCallbackUrl } from "@/lib/site-url";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 function SignupSwitch() {
@@ -45,7 +46,7 @@ function ProfessionalSignup() {
         password,
         options: {
           data: { full_name: fullName, role: "professional" },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          emailRedirectTo: authCallbackUrl("/onboarding"),
         },
       });
       if (signError) throw signError;

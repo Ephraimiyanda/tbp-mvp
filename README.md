@@ -6,18 +6,22 @@ Campus care: time-bounded therapy programmes and peer groups. Sessions use Googl
 
 1. New project at [supabase.com](https://supabase.com)
 2. SQL editor → run `supabase/migrations/20260813_init.sql`
-3. Auth → URL configuration: add `http://localhost:3000/auth/callback`
+3. Auth → URL configuration:
+   - **Site URL** must be the live app (your Vercel URL or custom domain), not localhost
+   - **Redirect URLs** add:
+     - `http://localhost:3000/auth/callback`
+     - `https://<your-app>.vercel.app/auth/callback`
+     - `https://<your-custom-domain>/auth/callback` if you have one
 
 Copy `.env.example` to `.env.local`:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-GOOGLE_SERVICE_ACCOUNT_EMAIL=
-GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=
-GOOGLE_CALENDAR_ID=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
+
+On Vercel, set `NEXT_PUBLIC_SITE_URL` to `https://<your-app>.vercel.app` (or your custom domain). If Site URL in Supabase stays on localhost, the confirm-email link will open localhost.
 
 Google keys are optional. Without them, professionals paste a Meet link when they schedule. The student still cannot see that link until session time.
 
