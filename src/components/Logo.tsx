@@ -2,21 +2,17 @@ import Link from "next/link";
 
 export function Logo({ inverted = false }: { inverted?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5 no-underline">
+    <Link href="/" className="flex items-center gap-2 no-underline">
       <span
-        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-          inverted ? "bg-mint text-forest" : "bg-forest text-mint"
+        className={`flex h-8 w-8 items-center justify-center rounded-full font-display text-lg ${
+          inverted ? "bg-clay-soft text-navy" : "bg-navy text-clay-soft"
         }`}
         aria-hidden
       >
-        t
+        m
       </span>
-      <span
-        className={`font-display text-xl font-semibold tracking-tight ${
-          inverted ? "text-cream" : "text-forest"
-        }`}
-      >
-        tbp
+      <span className={`font-display text-xl tracking-tight ${inverted ? "text-paper" : "text-navy"}`}>
+        myalo
       </span>
     </Link>
   );

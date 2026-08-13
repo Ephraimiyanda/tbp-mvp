@@ -1,10 +1,27 @@
-# TBP — campus wellbeing prototype
+# Myalo (Next.js) + Supabase
 
-One-day clickable prototype of a student counseling + peer-support product. Modeled on [BetterHelp `/next`](https://www.betterhelp.com/next/): landing, short intake, instant match, a thin student home.
+Campus care: time-bounded therapy programmes and peer groups. Sessions use Google Meet — Myalo does not run its own video stack.
 
-This is a demo, not a care service. Scope is in [PROTOTYPE.md](./PROTOTYPE.md).
+## 1. Create a Supabase project
 
-## Run locally
+1. New project at [supabase.com](https://supabase.com)
+2. SQL editor → run `supabase/migrations/20260813_init.sql`
+3. Auth → URL configuration: add `http://localhost:3000/auth/callback`
+
+Copy `.env.example` to `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+GOOGLE_SERVICE_ACCOUNT_EMAIL=
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=
+GOOGLE_CALENDAR_ID=
+```
+
+Google keys are optional. Without them, professionals paste a Meet link when they schedule. The student still cannot see that link until session time.
+
+## 2. Run the app
 
 ```bash
 npm install
@@ -13,11 +30,12 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## What you can click through
+Sign up once as a **student** and once as a **professional** (different emails). Complete intake as the student, subscribe, then schedule a session as the professional.
 
-1. Landing — pick Individual counseling, Peer support, or For a friend
-2. 8-question intake (crisis option shows resources instead of matching)
-3. Instant counselor match — confirm or switch
-4. Home — message the counselor, book a fake session, rematch
+## 3. Meet links (no cron)
 
-Session state lives in `localStorage`. No database, auth, payments, or live video.
+Hobby Vercel cannot run frequent crons, so Myalo does not use a scheduler. When the student or professional taps **Join Google Meet** at session time, `/api/sessions/[id]/join` checks the clock, releases the stored URL, and opens Meet. Until then the link stays hidden in `session_meet_links`.
+
+## Product
+
+See [docs/MYALO.md](./docs/MYALO.md).

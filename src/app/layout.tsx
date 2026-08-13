@@ -1,32 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Overpass } from "next/font/google";
+import { Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
-const overpass = Overpass({
-  variable: "--font-overpass",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "TBP — Campus wellbeing prototype",
+  title: "Myalo — campus care",
   description:
-    "A one-day prototype of student counseling and peer support. Modeled on BetterHelp’s get-started flow. Not a clinical service.",
+    "Time-bounded therapy programmes and peer groups for campus. Sessions on Google Meet. Confidential by design.",
   icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${overpass.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-cream text-ink">{children}</body>
+    <html lang="en" className={`${figtree.variable} ${fraunces.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col bg-paper text-ink">{children}</body>
     </html>
   );
 }
