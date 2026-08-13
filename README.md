@@ -30,7 +30,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Sign up once as a **student** and once as a **professional** (different emails). Complete intake as the student, subscribe, then schedule a session as the professional.
+Sign up once as a **student** (start at `/get-started` — questions first, account last) and once as a **professional** (different emails). Subscribe as the student, then schedule a session as the professional.
 
 ## 3. Meet links (no cron)
 

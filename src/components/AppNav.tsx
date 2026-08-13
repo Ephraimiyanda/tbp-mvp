@@ -24,6 +24,7 @@ export function AppNav({
         ]
       : [
           ["/app", "Home"],
+          ["/app/match", "Match"],
           ["/app/sessions", "Sessions"],
           ["/app/groups", "Groups"],
           ["/app/nuggets", "Nuggets"],

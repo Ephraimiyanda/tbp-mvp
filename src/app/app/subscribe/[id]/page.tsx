@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Card, PrimaryButton } from "@/components/Ui";
@@ -88,36 +89,42 @@ export default function SubscribePage() {
   const name = pro.profiles?.full_name ?? "Professional";
 
   return (
-    <div className="max-w-xl">
-      <h1 className="font-display text-3xl">Subscribe to start this programme</h1>
-      <p className="mt-2 text-sm text-muted">
-        Sessions are scheduled after you subscribe. Billing can attach later; this records the
-        student plan and opens the care pair.
+    <div className="mx-auto max-w-xl">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Start care</p>
+      <h1 className="font-display mt-2 text-4xl font-light">Subscribe to begin this programme</h1>
+      <p className="mt-3 text-sm leading-6 text-muted">
+        Nothing is booked until you opt in. After you subscribe, {name.split(" ")[0]} schedules Google Meet
+        sessions on a timeline that follows what you shared.
       </p>
-      <Card className="mt-6">
+      <Card className="mt-8 p-6">
         <div className="flex gap-4">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-navy font-display text-paper">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-lg text-paper">
             {initials(name)}
           </span>
           <div>
-            <p className="font-semibold">{name}</p>
+            <p className="font-display text-lg font-semibold">{name}</p>
             <p className="text-sm text-muted">{pro.credentials}</p>
           </div>
         </div>
-        <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
+        <dl className="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div>
             <dt className="text-muted">Focus</dt>
-            <dd className="font-medium">{concernLabel(plan.issue)}</dd>
+            <dd className="mt-1 font-medium">{concernLabel(plan.issue)}</dd>
           </div>
           <div>
             <dt className="text-muted">Length</dt>
-            <dd className="font-medium">{plan.weeks} weeks · {plan.sessions} sessions</dd>
+            <dd className="mt-1 font-medium">
+              {plan.weeks} weeks · {plan.sessions} sessions
+            </dd>
           </div>
         </dl>
       </Card>
       {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
-      <div className="mt-6">
-        <PrimaryButton onClick={subscribe} disabled={busy}>
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <Link href="/app/match" className="text-sm font-medium text-muted hover:text-ink">
+          See someone else
+        </Link>
+        <PrimaryButton onClick={() => void subscribe()} disabled={busy}>
           {busy ? "Starting…" : "Subscribe to the student plan"}
         </PrimaryButton>
       </div>

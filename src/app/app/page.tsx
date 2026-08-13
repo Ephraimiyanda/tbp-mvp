@@ -54,7 +54,7 @@ export default function StudentHome() {
         <p className="mt-2 max-w-xl text-muted">
           You’ll see a professional first, then subscribe. Care does not begin until you do.
         </p>
-        <Link href="/app/match" className="mt-6 inline-flex rounded-full bg-clay px-5 py-2.5 text-sm font-semibold text-paper">
+        <Link href="/app/match" className="mt-6 inline-flex rounded-md bg-clay px-6 py-3 text-sm font-semibold text-navy">
           See a professional
         </Link>
       </div>
@@ -87,13 +87,13 @@ export default function StudentHome() {
         </Card>
       </div>
       <div className="flex flex-wrap gap-3 text-sm">
-        <Link href="/app/sessions" className="font-semibold text-clay">
+        <Link href="/app/sessions" className="font-semibold text-navy">
           Sessions
         </Link>
-        <Link href="/app/groups" className="font-semibold text-clay">
+        <Link href="/app/groups" className="font-semibold text-navy">
           Peer groups
         </Link>
-        <Link href="/app/nuggets" className="font-semibold text-clay">
+        <Link href="/app/nuggets" className="font-semibold text-navy">
           Nuggets
         </Link>
       </div>

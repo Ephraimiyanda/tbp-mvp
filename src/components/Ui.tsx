@@ -18,8 +18,8 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${
-        disabled ? "cursor-not-allowed bg-line text-muted" : "bg-clay text-paper hover:bg-[#b45e3f]"
+      className={`inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold transition ${
+        disabled ? "cursor-not-allowed bg-line text-muted" : "bg-clay text-navy hover:bg-[#b7e6ae]"
       } ${className}`}
     >
       {children}
@@ -40,8 +40,8 @@ export function OptionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition ${
-        selected ? "border-navy bg-clay-soft" : "border-line bg-white hover:border-navy/30"
+      className={`w-full rounded-lg border px-5 py-4 text-left transition ${
+        selected ? "border-navy bg-clay-soft ring-2 ring-navy/20" : "border-line bg-white hover:border-navy/40"
       }`}
     >
       {children}
