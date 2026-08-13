@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
+import { clearDraft, draftIsReady, loadDraft } from "@/lib/intake-draft";
+import { persistIntake } from "@/lib/persist-intake";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -14,6 +16,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const checkEmail = Boolean(params.get("checkemail"));
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,6 +30,15 @@ function LoginForm() {
       const supabase = createClient();
       const { error: signError } = await supabase.auth.signInWithPassword({ email, password });
       if (signError) throw signError;
+      const { data: auth } = await supabase.auth.getUser();
+      const draft = loadDraft();
+      if (auth.user && draftIsReady(draft)) {
+        await persistIntake(supabase, auth.user.id, draft);
+        clearDraft();
+        router.push("/matching");
+        router.refresh();
+        return;
+      }
       const next = params.get("next") || "/app";
       router.push(next);
       router.refresh();
@@ -40,12 +52,15 @@ function LoginForm() {
   return (
     <AuthShell>
       <h1 className="font-display text-3xl font-light text-navy">Log in</h1>
-      {params.get("checkemail") ? (
-        <p className="mt-3 text-sm text-ok">Check your email to confirm the account, then log in.</p>
+      {checkEmail ? (
+        <p className="mt-3 text-sm leading-6 text-ok">
+          Confirm the link we sent to your email, then log in here. Your questionnaire answers are
+          saved in this browser.
+        </p>
       ) : (
         <p className="mt-2 text-sm text-muted">Welcome back. Your match, groups, and sessions are here.</p>
       )}
-      <form onSubmit={onSubmit} className="mt-8 space-y-4">
+      <form onSubmit={onSubmit} className="mt-8 space-y-4 text-left">
         <Field label="Email">
           <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
         </Field>

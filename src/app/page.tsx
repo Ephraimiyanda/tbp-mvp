@@ -4,30 +4,30 @@ import { MarketingHeader, SiteFooter } from "@/components/SiteChrome";
 export default function LandingPage() {
   return (
     <div className="flex min-h-full flex-col">
-      <MarketingHeader />
-      <main>
-        <section className="calm-wash">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-24">
+      <div className="bg-navy text-paper">
+        <MarketingHeader />
+        <section>
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-4 md:grid-cols-[1.15fr_0.85fr] md:pb-24">
             <div>
-              <p className="text-sm font-medium tracking-wide text-ok">
+              <p className="text-sm font-medium tracking-wide text-clay">
                 Counseling and peer support for campus
               </p>
-              <h1 className="font-display mt-4 max-w-xl text-5xl font-light leading-[1.1] tracking-tight text-navy md:text-6xl">
+              <h1 className="font-display mt-4 max-w-xl text-5xl font-light leading-[1.1] tracking-tight md:text-6xl">
                 You deserve to feel okay here.
               </h1>
-              <p className="mt-8 text-lg text-muted">What kind of support are you looking for?</p>
+              <p className="mt-8 text-lg text-paper/80">What kind of support are you looking for?</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <PathCard href="/signup" title="Individual" subtitle="Counseling for me" />
                 <PathCard href="/signup?intent=peer" title="Peer support" subtitle="With other students" />
                 <PathCard href="/signup?role=professional" title="Professional" subtitle="I provide care" />
               </div>
-              <p className="mt-6 text-sm text-muted">
+              <p className="mt-6 text-sm text-paper/60">
                 Sign up with a short questionnaire. Then a match you can see before you subscribe.
               </p>
             </div>
-            <div className="rounded-3xl bg-white/80 p-6 shadow-sm ring-1 ring-line">
-              <p className="text-xs uppercase tracking-[0.2em] text-ok">How matching feels</p>
-              <ul className="mt-5 space-y-4 text-ink">
+            <div className="rounded-3xl bg-white/10 p-6 ring-1 ring-white/15">
+              <p className="text-xs uppercase tracking-[0.2em] text-clay">How matching feels</p>
+              <ul className="mt-5 space-y-4 text-paper/90">
                 {[
                   "Answer a few questions while you create your account.",
                   "See the professional before you subscribe.",
@@ -35,7 +35,7 @@ export default function LandingPage() {
                   "Switch if it isn’t the right fit.",
                 ].map((line) => (
                   <li key={line} className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky" />
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-clay" />
                     {line}
                   </li>
                 ))}
@@ -43,17 +43,19 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+      </div>
 
-        <section className="bg-navy text-paper">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-white/10 px-5 md:grid-cols-3 md:divide-x md:divide-y-0">
+      <main>
+        <section className="bg-sky-soft">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-navy/10 px-5 md:grid-cols-3 md:divide-x md:divide-y-0">
             {[
               { value: "8 questions", label: "During signup" },
               { value: "Subscribe", label: "Before any session is booked" },
               { value: "1 click", label: "To see another professional" },
             ].map((s) => (
               <div key={s.label} className="py-8 text-center">
-                <p className="font-display text-3xl font-light text-clay">{s.value}</p>
-                <p className="mt-2 text-sm text-paper/70">{s.label}</p>
+                <p className="font-display text-3xl font-light text-navy">{s.value}</p>
+                <p className="mt-2 text-sm text-muted">{s.label}</p>
               </div>
             ))}
           </div>
@@ -83,7 +85,7 @@ export default function LandingPage() {
                   body: "Join or create a peer group. Check in, track growth, and read nuggets from the professional you subscribe to.",
                 },
               ].map((step) => (
-                <article key={step.n} className="rounded-3xl bg-paper p-6 ring-1 ring-line">
+                <article key={step.n} className="rounded-3xl bg-sky-soft p-6">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-sm font-semibold text-clay">
                     {step.n}
                   </span>
@@ -95,10 +97,10 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="calm-wash">
+        <section className="bg-sky-soft">
           <div className="mx-auto max-w-6xl px-5 py-20">
             <h2 className="font-display text-3xl font-light text-navy">Myalo vs. the campus counseling center</h2>
-            <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white shadow-sm">
+            <div className="mt-8 overflow-x-auto rounded-3xl border border-line bg-white">
               <table className="w-full min-w-[32rem] text-left text-sm">
                 <thead className="bg-navy text-paper">
                   <tr>
@@ -142,7 +144,7 @@ export default function LandingPage() {
                 },
                 {
                   q: "When do I create an account?",
-                  a: "At the end of signup. The questionnaire is the onboarding — a few questions, then your name, email, and password.",
+                  a: "At the end of signup. The questionnaire is the onboarding — a few questions, then your name, email, and password. We then ask you to confirm your email before you log in.",
                 },
                 {
                   q: "Is this therapy?",
@@ -181,7 +183,7 @@ function PathCard({
   return (
     <Link
       href={href}
-      className="cursor-pointer rounded-2xl bg-white px-4 py-4 text-ink shadow-sm ring-1 ring-line transition hover:bg-clay-soft hover:ring-sky"
+      className="cursor-pointer rounded-2xl bg-white px-4 py-4 text-ink transition hover:bg-clay"
     >
       <span className="block font-display text-lg font-semibold text-navy">{title}</span>
       <span className="mt-1 block text-sm text-muted">{subtitle}</span>

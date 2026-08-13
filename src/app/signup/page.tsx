@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
+import { Logo } from "@/components/Logo";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -21,6 +22,13 @@ function ProfessionalSignup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [awaitingEmail, setAwaitingEmail] = useState(false);
+
+  useEffect(() => {
+    if (!awaitingEmail) return;
+    const timer = window.setTimeout(() => router.replace("/login?checkemail=1"), 2800);
+    return () => window.clearTimeout(timer);
+  }, [awaitingEmail, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,13 +50,32 @@ function ProfessionalSignup() {
       });
       if (signError) throw signError;
       const { data } = await supabase.auth.getSession();
-      if (data.session) router.push("/onboarding");
-      else router.push("/login?checkemail=1");
+      if (data.session) await supabase.auth.signOut();
+      setAwaitingEmail(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign up");
     } finally {
       setBusy(false);
     }
+  }
+
+  if (awaitingEmail) {
+    return (
+      <div className="flex min-h-full flex-col bg-white">
+        <header className="bg-navy text-paper">
+          <div className="mx-auto flex h-14 max-w-md items-center px-5">
+            <Logo inverted />
+          </div>
+        </header>
+        <main className="flex flex-1 flex-col items-center justify-center px-5 text-center">
+          <h1 className="font-display text-3xl font-light text-navy">Confirm your email</h1>
+          <p className="mt-3 max-w-md text-sm leading-6 text-muted">
+            We sent a confirmation link to {email}. Open it to finish creating your account.
+          </p>
+          <p className="mt-6 text-sm text-muted">Taking you to log in…</p>
+        </main>
+      </div>
+    );
   }
 
   return (
@@ -58,7 +85,7 @@ function ProfessionalSignup() {
         Create your account, then finish a short profile. Students see you after they complete intake
         and subscribe.
       </p>
-      <form onSubmit={onSubmit} className="mt-8 space-y-4">
+      <form onSubmit={onSubmit} className="mt-8 space-y-4 text-left">
         <Field label="Full name">
           <TextInput value={fullName} onChange={(e) => setFullName(e.target.value)} required autoComplete="name" />
         </Field>
@@ -77,7 +104,7 @@ function ProfessionalSignup() {
         </Field>
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <PrimaryButton type="submit" disabled={busy} className="w-full">
-          {busy ? "Creating…" : "Continue"}
+          {busy ? "Creating…" : "Create account"}
         </PrimaryButton>
       </form>
       <p className="mt-6 text-sm text-muted">
@@ -96,11 +123,7 @@ function ProfessionalSignup() {
 
 export default function SignupPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="calm-wash min-h-full px-5 py-16 text-muted">Loading onboarding…</div>
-      }
-    >
+    <Suspense fallback={<div className="min-h-full bg-white px-5 py-16 text-center text-muted">Loading onboarding…</div>}>
       <SignupSwitch />
     </Suspense>
   );

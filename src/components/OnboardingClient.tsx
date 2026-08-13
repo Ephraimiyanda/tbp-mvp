@@ -161,17 +161,16 @@ function ProOnboarding({
 
 function Shell({ children }: { children: ReactNode }) {
   return (
-    <div className="calm-wash flex min-h-full flex-col">
-      <header className="border-b border-line/70 bg-white/75 backdrop-blur">
+    <div className="flex min-h-full flex-col bg-white">
+      <header className="bg-navy text-paper">
         <div className="mx-auto flex h-14 max-w-xl items-center justify-between px-5">
-          <Logo />
-          <p className="text-xs text-muted">Professional profile</p>
-        </div>
-        <div className="h-1 bg-line">
-          <div className="progress-blend h-1 w-full" />
+          <Logo inverted />
+          <p className="text-xs text-paper/70">Professional profile</p>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-10">{children}</main>
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-5 py-10">
+        <div className="w-full">{children}</div>
+      </main>
     </div>
   );
 }

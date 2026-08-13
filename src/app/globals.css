@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #2a5f58;
-  --navy-soft: #1e4a46;
-  --paper: #f5faf8;
-  --clay: #9fd9cc;
-  --clay-soft: #d7f1ea;
-  --sky: #7eb8d4;
-  --sky-soft: #e7f4fa;
-  --ink: #1b3330;
-  --muted: #4e6864;
-  --line: #d4e5e0;
+  --navy: #0b2e6b;
+  --navy-soft: #081f4a;
+  --paper: #ffffff;
+  --clay: #c9def5;
+  --clay-soft: #eaf2fb;
+  --sky: #7ba8d4;
+  --sky-soft: #eaf2fb;
+  --ink: #122033;
+  --muted: #4a5c73;
+  --line: #d5e2ef;
   --danger: #b85c5c;
-  --ok: #3d8b7a;
+  --ok: #2b6cb0;
 }
 
 @theme inline {
@@ -72,24 +72,16 @@ textarea {
 }
 
 ::selection {
-  background: var(--clay);
+  background: var(--sky-soft);
   color: var(--navy);
 }
 
-.calm-wash {
-  background:
-    radial-gradient(1100px 520px at 8% -8%, rgba(159, 217, 204, 0.5), transparent 58%),
-    radial-gradient(900px 480px at 100% 0%, rgba(126, 184, 212, 0.38), transparent 52%),
-    radial-gradient(700px 400px at 50% 100%, rgba(215, 241, 234, 0.8), transparent 55%),
-    var(--paper);
-}
-
 .calm-hero {
-  background: linear-gradient(135deg, #1e4a46 0%, #2a5f58 48%, #2f6a7a 100%);
+  background: var(--navy);
 }
 
 .progress-blend {
-  background: linear-gradient(90deg, var(--ok), var(--sky));
+  background: var(--clay);
 }
 
 @keyframes myalo-pulse {

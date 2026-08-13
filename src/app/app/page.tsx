@@ -54,7 +54,7 @@ export default function StudentHome() {
         <p className="mt-2 max-w-xl text-muted">
           You’ll see a professional first, then subscribe. Care does not begin until you do.
         </p>
-        <Link href="/app/match" className="mt-6 inline-flex rounded-md bg-clay px-6 py-3 text-sm font-semibold text-navy">
+        <Link href="/app/match" className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft">
           See a professional
         </Link>
       </div>

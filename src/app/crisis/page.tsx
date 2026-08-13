@@ -4,10 +4,10 @@ import { Logo } from "@/components/Logo";
 
 export default function CrisisPage() {
   return (
-    <div className="calm-wash flex min-h-full flex-col">
-      <header className="border-b border-line">
+    <div className="flex min-h-full flex-col bg-white">
+      <header className="bg-navy text-paper">
         <div className="mx-auto flex h-14 max-w-2xl items-center px-5">
-          <Logo />
+          <Logo inverted />
         </div>
       </header>
       <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-12">

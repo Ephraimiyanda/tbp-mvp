@@ -50,7 +50,7 @@ export default function MatchingPage() {
   }, [router]);
 
   return (
-    <div className="calm-hero flex min-h-full flex-col text-paper">
+    <div className="flex min-h-full flex-col bg-navy text-paper">
       <header className="mx-auto flex h-16 w-full max-w-3xl items-center px-5">
         <Logo inverted />
       </header>

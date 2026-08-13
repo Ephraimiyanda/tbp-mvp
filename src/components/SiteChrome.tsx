@@ -4,22 +4,22 @@ import { Logo } from "./Logo";
 
 export function MarketingHeader() {
   return (
-    <header className="border-b border-line/70 bg-white/80 text-ink backdrop-blur">
+    <header className="bg-navy text-paper">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Logo />
+        <Logo inverted />
         <nav className="flex items-center gap-6 text-sm">
-          <a href="#how" className="hidden cursor-pointer text-muted hover:text-navy md:inline">
+          <a href="#how" className="hidden cursor-pointer text-paper/80 hover:text-paper md:inline">
             How it works
           </a>
-          <a href="#faq" className="hidden cursor-pointer text-muted hover:text-navy md:inline">
+          <a href="#faq" className="hidden cursor-pointer text-paper/80 hover:text-paper md:inline">
             FAQ
           </a>
-          <Link href="/login" className="cursor-pointer text-muted hover:text-navy">
+          <Link href="/login" className="cursor-pointer text-paper/80 hover:text-paper">
             Log in
           </Link>
           <Link
             href="/signup"
-            className="cursor-pointer rounded-full bg-clay px-4 py-2 font-semibold text-navy hover:bg-sky-soft"
+            className="cursor-pointer rounded-full bg-clay px-4 py-2 font-semibold text-navy hover:bg-white"
           >
             Sign up
           </Link>
@@ -52,13 +52,15 @@ export function SiteFooter() {
 
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
-    <div className="calm-wash flex min-h-full flex-col">
-      <header className="border-b border-line/70 bg-white/70 backdrop-blur">
+    <div className="flex min-h-full flex-col bg-white">
+      <header className="bg-navy text-paper">
         <div className="mx-auto flex h-14 max-w-md items-center px-5">
-          <Logo />
+          <Logo inverted />
         </div>
       </header>
-      <main className="mx-auto w-full max-w-md flex-1 px-5 py-10">{children}</main>
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 py-10">
+        <div className="w-full text-center">{children}</div>
+      </main>
     </div>
   );
 }
