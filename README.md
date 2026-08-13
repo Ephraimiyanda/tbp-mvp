@@ -14,7 +14,6 @@ Copy `.env.example` to `.env.local`:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-CRON_SECRET=
 GOOGLE_SERVICE_ACCOUNT_EMAIL=
 GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=
 GOOGLE_CALENDAR_ID=
@@ -33,16 +32,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Sign up once as a **student** and once as a **professional** (different emails). Complete intake as the student, subscribe, then schedule a session as the professional.
 
-## 3. Release Meet links
+## 3. Meet links (no cron)
 
-Hit this on a schedule (every minute) so links go out when the clock hits:
-
-```
-GET /api/cron/release-meets
-Authorization: Bearer $CRON_SECRET
-```
-
-Students can also tap **Join** after `scheduled_at`; the join API only returns the URL once that time has passed.
+Hobby Vercel cannot run frequent crons, so Myalo does not use a scheduler. When the student or professional taps **Join Google Meet** at session time, `/api/sessions/[id]/join` checks the clock, releases the stored URL, and opens Meet. Until then the link stays hidden in `session_meet_links`.
 
 ## Product
 

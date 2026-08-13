@@ -76,7 +76,7 @@ The longest matching concern wins. Professionals can still pace sessions inside 
 | App | Next.js (App Router) |
 | Auth + data | Supabase (Postgres, Auth, RLS) |
 | Sessions | Google Calendar → Meet when credentials exist; otherwise the professional pastes a Meet link |
-| Release | `/api/cron/release-meets` plus join endpoint that only returns the URL once the clock hits |
+| Release | Student/professional tap Join; the API only returns the Meet URL once `scheduled_at` has passed. No Vercel cron (Hobby cannot run frequent jobs). |
 | Payments | Subscription row now; Stripe can attach later |
 
 ---

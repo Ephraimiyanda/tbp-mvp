@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { JoinMeetButton } from "@/components/JoinMeetButton";
 import { Card, Field, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, SessionRow, Subscription } from "@/lib/types";
@@ -118,10 +119,17 @@ export default function ProSchedule() {
           {sessions.map((s) => (
             <Card key={s.id}>
               <p className="font-medium">{new Date(s.scheduled_at).toLocaleString()}</p>
-              <p className="text-sm text-muted">{s.status} · {s.duration_min} min</p>
+              <p className="text-sm text-muted">{s.duration_min} min</p>
               {s.notes_professional ? (
                 <p className="mt-2 text-sm italic text-muted">Note: {s.notes_professional}</p>
               ) : null}
+              <div className="mt-3">
+                <JoinMeetButton
+                  sessionId={s.id}
+                  scheduledAt={s.scheduled_at}
+                  alreadyReleased={Boolean(s.meet_released_at)}
+                />
+              </div>
             </Card>
           ))}
         </div>
