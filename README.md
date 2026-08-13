@@ -6,8 +6,8 @@ Campus care: time-bounded therapy programmes and peer groups. Sessions use Googl
 
 1. New project at [supabase.com](https://supabase.com)
 2. SQL editor → run `supabase/migrations/20260813_init.sql`
-3. Copy the **service role** key into `SUPABASE_SERVICE_ROLE_KEY`. Signup creates confirmed users through `/api/auth/signup` — **no email verification link**.
-4. Authentication → Providers → Email: you can leave “Confirm email” on or off; the app auto-confirms via the service role either way.
+3. Copy the **service role** key into `SUPABASE_SERVICE_ROLE_KEY` on Vercel (and locally). With it, signup auto-confirms accounts and never sends a verification email.
+4. If the service role key is missing, signup falls back to the browser — then you must turn **Confirm email** off under Authentication → Providers → Email, or Create account will fail.
 5. Optional URL settings (only needed if you re-enable confirm emails later):
 
    - **Site URL** = `https://myola-health.vercel.app`

@@ -30,7 +30,11 @@ export async function POST(request: Request) {
 
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json(
-      { error: "Server signup is not configured (missing SUPABASE_SERVICE_ROLE_KEY)." },
+      {
+        fallback: true,
+        error:
+          "SUPABASE_SERVICE_ROLE_KEY is not set. Falling back to client signup.",
+      },
       { status: 503 },
     );
   }
