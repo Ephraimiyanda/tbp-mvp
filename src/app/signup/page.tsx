@@ -6,8 +6,8 @@ import { Suspense, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
-import { emailRedirectUrl } from "@/lib/site-url";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { signupWithoutEmailVerification } from "@/lib/signup";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 function SignupSwitch() {
   const params = useSearchParams();
@@ -32,20 +32,14 @@ function ProfessionalSignup() {
     }
     setBusy(true);
     try {
-      const supabase = createClient();
-      const { error: signError } = await supabase.auth.signUp({
+      await signupWithoutEmailVerification({
         email,
         password,
-        options: {
-          data: { full_name: fullName, role: "professional" },
-          emailRedirectTo: emailRedirectUrl(),
-        },
+        fullName,
+        role: "professional",
       });
-      if (signError) throw signError;
-      const { data } = await supabase.auth.getSession();
-      if (data.session) await supabase.auth.signOut();
-      const q = email ? `?email=${encodeURIComponent(email)}` : "";
-      router.replace(`/check-email${q}`);
+      router.push("/onboarding");
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign up");
     } finally {

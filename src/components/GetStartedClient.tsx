@@ -9,7 +9,7 @@ import { UniversitySelect } from "@/components/UniversitySelect";
 import { WaveJoin } from "@/components/WaveDivider";
 import { emptyDraft, loadDraft, saveDraft, type IntakeDraft } from "@/lib/intake-draft";
 import { persistIntake } from "@/lib/persist-intake";
-import { emailRedirectUrl } from "@/lib/site-url";
+import { signupWithoutEmailVerification } from "@/lib/signup";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { CONCERNS } from "@/lib/types";
 
@@ -148,19 +148,17 @@ export function GetStartedClient() {
         else router.push("/matching");
         return;
       }
-      const { error: signError } = await supabase.auth.signUp({
+      const signedIn = await signupWithoutEmailVerification({
         email,
         password,
-        options: {
-          data: { full_name: fullName, role: "student" },
-          emailRedirectTo: emailRedirectUrl(),
-        },
+        fullName,
+        role: "student",
       });
-      if (signError) throw signError;
-      const { data: session } = await supabase.auth.getSession();
-      if (session.session) await supabase.auth.signOut();
-      const q = email ? `?email=${encodeURIComponent(email)}` : "";
-      router.replace(`/check-email${q}`);
+      const { data: auth } = await signedIn.auth.getUser();
+      if (!auth.user) throw new Error("Account created but sign-in failed. Try logging in.");
+      await persistIntake(signedIn, auth.user.id, finalDraft);
+      if (intent === "peer") router.push("/app/groups");
+      else router.push("/matching");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not finish onboarding");
     } finally {
