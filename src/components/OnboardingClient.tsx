@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/components/Logo";
 import { Field, OptionButton, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
-import { WAVE_CLEAR, WaveEdge } from "@/components/WaveDivider";
+import { WaveJoin } from "@/components/WaveDivider";
 import { createClient } from "@/lib/supabase/client";
 import { CONCERNS, type Profile } from "@/lib/types";
 
@@ -168,9 +168,9 @@ function Shell({ children }: { children: ReactNode }) {
           <Logo inverted />
           <p className="text-xs text-paper/70">Professional profile</p>
         </div>
-        <WaveEdge color="navy" />
       </header>
-      <main className={`mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-5 pb-10 ${WAVE_CLEAR}`}>
+      <WaveJoin from="navy" to="white" />
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-5 py-10">
         <div className="w-full">{children}</div>
       </main>
     </div>
