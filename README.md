@@ -6,14 +6,25 @@ Campus care: time-bounded therapy programmes and peer groups. Sessions use Googl
 
 1. New project at [supabase.com](https://supabase.com)
 2. SQL editor → run `supabase/migrations/20260813_init.sql`
-3. Auth → URL configuration:
-   - **Site URL** must be the live app (your Vercel URL or custom domain), not localhost
-   - **Redirect URLs** add:
-     - `http://localhost:3000/auth/callback`
-     - `https://<your-app>.vercel.app/auth/callback`
-     - `https://<your-custom-domain>/auth/callback` if you have one
+3. Authentication → URL configuration. This is what fills `redirect_to` on the confirm-email link:
 
-Copy `.env.example` to `.env.local`:
+   - **Site URL** = the live app, e.g. `https://<your-app>.vercel.app`  
+     Do **not** leave this as `http://localhost:3000`. If Site URL is localhost, confirm links open localhost even when you signed up on Vercel.
+   - **Redirect URLs** — add all of these (wildcards matter; a path without `/**` will not match):
+
+     ```
+     http://localhost:3000/auth/callback
+     http://localhost:3000/**
+     https://<your-app>.vercel.app/auth/callback
+     https://<your-app>.vercel.app/**
+     https://*-<your-team>.vercel.app/**
+     ```
+
+4. Authentication → Email templates → **Confirm signup** must use `{{ .ConfirmationURL }}` (not `{{ .SiteURL }}`).
+
+5. Sign up **again** after saving those settings. Confirm emails already sent still contain the old `redirect_to=http://localhost:3000`.
+
+Copy `.env.example` to `.env.local` for local work:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=
@@ -21,7 +32,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-On Vercel, set `NEXT_PUBLIC_SITE_URL` to `https://<your-app>.vercel.app` (or your custom domain). If Site URL in Supabase stays on localhost, the confirm-email link will open localhost.
+On **Vercel**, set `NEXT_PUBLIC_SITE_URL` to `https://<your-app>.vercel.app` (or your custom domain). Do not paste localhost there. Redeploy after changing env vars.
 
 Google keys are optional. Without them, professionals paste a Meet link when they schedule. The student still cannot see that link until session time.
 
