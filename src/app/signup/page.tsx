@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
-import { emailRedirectUrl } from "@/lib/site-url";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { signupWithoutEmailVerification } from "@/lib/signup";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 function SignupSwitch() {
   const params = useSearchParams();
@@ -22,13 +22,6 @@ function ProfessionalSignup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [awaitingEmail, setAwaitingEmail] = useState(false);
-
-  useEffect(() => {
-    if (!awaitingEmail) return;
-    const timer = window.setTimeout(() => router.replace("/login?checkemail=1"), 2800);
-    return () => window.clearTimeout(timer);
-  }, [awaitingEmail, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,36 +32,19 @@ function ProfessionalSignup() {
     }
     setBusy(true);
     try {
-      const supabase = createClient();
-      const { error: signError } = await supabase.auth.signUp({
+      await signupWithoutEmailVerification({
         email,
         password,
-        options: {
-          data: { full_name: fullName, role: "professional" },
-          emailRedirectTo: emailRedirectUrl(),
-        },
+        fullName,
+        role: "professional",
       });
-      if (signError) throw signError;
-      const { data } = await supabase.auth.getSession();
-      if (data.session) await supabase.auth.signOut();
-      setAwaitingEmail(true);
+      router.push("/onboarding");
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign up");
     } finally {
       setBusy(false);
     }
-  }
-
-  if (awaitingEmail) {
-    return (
-      <AuthShell>
-        <h1 className="font-display text-3xl font-light text-navy">Confirm your email</h1>
-        <p className="mt-3 max-w-md text-sm leading-6 text-muted">
-          We sent a confirmation link to {email}. Open it to finish creating your account.
-        </p>
-        <p className="mt-6 text-sm text-muted">Taking you to log in…</p>
-      </AuthShell>
-    );
   }
 
   return (
