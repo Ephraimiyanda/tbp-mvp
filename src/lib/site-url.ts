@@ -31,7 +31,7 @@ export function getSiteUrl() {
   }
 
   if (explicit) return explicit;
-  return "http://localhost:3000";
+  return "https://myola-health.vercel.app/";
 }
 
 /**
@@ -40,7 +40,7 @@ export function getSiteUrl() {
  * Authentication → URL configuration → Redirect URLs.
  */
 export function emailRedirectUrl() {
-  return `${PRODUCTION_ORIGIN}/login`;
+  return `https://myola-health.vercel.app/login`;
 }
 
 export function safeNextPath(next: string | null, fallback = "/app") {
