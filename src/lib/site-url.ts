@@ -34,15 +34,6 @@ export function getSiteUrl() {
   return "http://localhost:3000";
 }
 
-/**
- * Confirm-email `redirect_to`. Hardcoded so signup never writes localhost
- * (or a preview URL) into the message. Add this exact URL in Supabase
- * Authentication → URL configuration → Redirect URLs.
- */
-export function emailRedirectUrl() {
-  return `${PRODUCTION_ORIGIN}/login`;
-}
-
 export function safeNextPath(next: string | null, fallback = "/app") {
   if (!next || !next.startsWith("/") || next.startsWith("//") || next.includes("://")) {
     return fallback;

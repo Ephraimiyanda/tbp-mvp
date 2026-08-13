@@ -181,7 +181,7 @@ export default function LandingPage() {
                 },
                 {
                   q: "When do I create an account?",
-                  a: "At the end of signup. The questionnaire is the onboarding — a few questions, then your name, email, and password. We then ask you to confirm your email before you log in.",
+                  a: "At the end of signup. The questionnaire is the onboarding — a few questions, then your name, email, and password. You’re signed in right away; no email confirmation step.",
                 },
                 {
                   q: "Is this therapy?",
