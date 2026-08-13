@@ -8,16 +8,14 @@ Campus care: time-bounded therapy programmes and peer groups. Sessions use Googl
 2. SQL editor → run `supabase/migrations/20260813_init.sql`
 3. Authentication → URL configuration. This is what fills `redirect_to` on the confirm-email link:
 
-   - **Site URL** = the live app, e.g. `https://<your-app>.vercel.app`  
+   - **Site URL** = `https://myola-health.vercel.app`  
      Do **not** leave this as `http://localhost:3000`. If Site URL is localhost, confirm links open localhost even when you signed up on Vercel.
    - **Redirect URLs** — add all of these (wildcards matter; a path without `/**` will not match):
 
      ```
-     http://localhost:3000/auth/callback
+     https://myola-health.vercel.app/login
+     https://myola-health.vercel.app/**
      http://localhost:3000/**
-     https://<your-app>.vercel.app/auth/callback
-     https://<your-app>.vercel.app/**
-     https://*-<your-team>.vercel.app/**
      ```
 
 4. Authentication → Email templates → **Confirm signup** must use `{{ .ConfirmationURL }}` (not `{{ .SiteURL }}`).
@@ -32,7 +30,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-On **Vercel**, set `NEXT_PUBLIC_SITE_URL` to `https://<your-app>.vercel.app` (or your custom domain). Do not paste localhost there. Redeploy after changing env vars.
+On **Vercel**, set `NEXT_PUBLIC_SITE_URL` to `https://myola-health.vercel.app`. Do not paste localhost there. Redeploy after changing env vars. Confirm-email `redirect_to` is always `https://myola-health.vercel.app/login`.
 
 Google keys are optional. Without them, professionals paste a Meet link when they schedule. The student still cannot see that link until session time.
 
