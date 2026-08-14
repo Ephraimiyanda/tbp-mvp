@@ -23,6 +23,7 @@ export default function MatchProfessionalPage() {
   } | null>(null);
   const [poolSize, setPoolSize] = useState(0);
   const [nextId, setNextId] = useState<string | null>(null);
+  const [rematching, setRematching] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -99,6 +100,28 @@ export default function MatchProfessionalPage() {
     });
     setHasIntake(true);
     setLoading(false);
+  }
+
+  async function rematch() {
+    setRematching(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/match/rematch", { method: "POST" });
+      const json = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        next_professional_id?: string | null;
+      };
+      if (!res.ok) throw new Error(json.error || "Could not rematch");
+      if (!json.next_professional_id) {
+        setError(json.error || "No other professionals available right now");
+        setRematching(false);
+        return;
+      }
+      router.replace(`/app/match/${json.next_professional_id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not rematch");
+      setRematching(false);
+    }
   }
 
   async function propose() {
@@ -239,22 +262,33 @@ export default function MatchProfessionalPage() {
           ))}
         </ul>
       </Card>
-      <div className="flex items-center justify-between gap-4">
-        <button
-          type="button"
-          className="cursor-pointer text-sm font-medium text-muted hover:text-navy"
-          onClick={() => void seeSomeoneElse()}
-        >
-          See someone else
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-4">
         {alreadyInCare ? (
-          <NavButton href="/app" variant="primary">
-            Back to care home
-          </NavButton>
+          <PrimaryButton onClick={() => void rematch()} disabled={rematching}>
+            {rematching ? "Finding someone else…" : "Rematch with someone else"}
+          </PrimaryButton>
+        ) : (
+          <button
+            type="button"
+            className="cursor-pointer text-sm font-medium text-muted hover:text-navy"
+            onClick={() => void seeSomeoneElse()}
+          >
+            See someone else
+          </button>
+        )}
+        {alreadyInCare ? (
+          isCurrentCare ? (
+            <NavButton href="/app">Back to care home</NavButton>
+          ) : (
+            <NavButton href="/app" variant="primary">
+              Keep current care
+            </NavButton>
+          )
         ) : (
           <PrimaryButton onClick={() => void propose()}>Continue to subscribe</PrimaryButton>
         )}
       </div>
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
       <p className="text-xs text-muted">
         Matching proposes. Subscribing starts the programme.{" "}
         <Link href="/crisis" className="font-semibold text-navy">
