@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { CareTabs, NavButton, PressableCard } from "@/components/NavControls";
 import { Card } from "@/components/Ui";
 import { HeroMatch } from "@/components/illustrations";
 import { createClient } from "@/lib/supabase/client";
@@ -23,7 +23,9 @@ function StudentHomeInner() {
   const [nextSession, setNextSession] = useState<SessionRow | null>(null);
   const [nuggets, setNuggets] = useState<(Nugget & { author?: string })[]>([]);
   const [loading, setLoading] = useState(true);
-  const [demoPros, setDemoPros] = useState<{ profile_id: string; credentials: string | null; profiles?: { full_name: string } | null }[]>([]);
+  const [demoPros, setDemoPros] = useState<
+    { profile_id: string; credentials: string | null; profiles?: { full_name: string } | null }[]
+  >([]);
   const [demoGroups, setDemoGroups] = useState<{ id: string; name: string; description: string | null }[]>([]);
 
   useEffect(() => {
@@ -103,15 +105,12 @@ function StudentHomeInner() {
               You’ll see a professional first, then pay to subscribe. Care does not begin until payment
               succeeds.
             </p>
-            <Link
-              href="/app/match"
-              className="mt-6 inline-flex cursor-pointer rounded-full bg-navy px-6 py-3 text-sm font-semibold text-paper hover:bg-navy-soft"
-            >
-              See a professional
-            </Link>
-            <Link href="/app/groups" className="ml-4 text-sm font-semibold text-navy underline">
-              Browse peer communities
-            </Link>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <NavButton href="/app/match" variant="primary" className="px-6 py-3">
+                See a professional
+              </NavButton>
+              <NavButton href="/app/groups">Browse peer communities</NavButton>
+            </div>
           </div>
           <div className="mx-auto w-full max-w-xs">
             <HeroMatch />
@@ -125,10 +124,13 @@ function StudentHomeInner() {
                 <p className="mt-1 text-sm text-muted">Demo clinicians you can subscribe to after matching.</p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {demoPros.map((p) => (
-                    <Card key={p.profile_id}>
-                      <p className="font-display text-lg font-semibold">{p.profiles?.full_name ?? "Professional"}</p>
+                    <PressableCard key={p.profile_id} href={`/app/match/${p.profile_id}`}>
+                      <p className="font-display text-lg font-semibold">
+                        {p.profiles?.full_name ?? "Professional"}
+                      </p>
                       <p className="mt-1 text-sm text-muted">{p.credentials}</p>
-                    </Card>
+                      <p className="mt-3 text-sm font-semibold text-navy">View match →</p>
+                    </PressableCard>
                   ))}
                 </div>
               </div>
@@ -139,13 +141,11 @@ function StudentHomeInner() {
                 <p className="mt-1 text-sm text-muted">Join without a subscription.</p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {demoGroups.map((g) => (
-                    <Card key={g.id}>
+                    <PressableCard key={g.id} href={`/app/groups/${g.id}`}>
                       <p className="font-display text-lg font-semibold">{g.name}</p>
                       <p className="mt-1 text-sm text-muted">{g.description}</p>
-                      <Link href={`/app/groups/${g.id}`} className="mt-3 inline-block text-sm font-semibold text-navy underline">
-                        Open
-                      </Link>
-                    </Card>
+                      <p className="mt-3 text-sm font-semibold text-navy">Open →</p>
+                    </PressableCard>
                   ))}
                 </div>
               </div>
@@ -166,7 +166,10 @@ function StudentHomeInner() {
           professional are unlocked below.
         </p>
       ) : null}
-      <h1 className="font-display text-3xl">Your care</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-3xl">Your care</h1>
+        <CareTabs />
+      </div>
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <p className="text-xs uppercase tracking-wide text-muted">Professional</p>
@@ -178,59 +181,45 @@ function StudentHomeInner() {
             {planMeta?.label ?? concernLabel(plan?.primary_issue ?? "")} · {plan?.duration_weeks} weeks
           </p>
         </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wide text-muted">Next session</p>
-          <p className="mt-2 font-medium">
-            {nextSession
-              ? `${new Date(nextSession.scheduled_at).toLocaleString()} · ${
-                  nextSession.modality === "chat" ? "Chat" : "Meet"
-                }`
-              : "Waiting for your professional to schedule"}
-          </p>
-          {nextSession ? (
-            <Link href="/app/sessions" className="mt-2 inline-block text-sm font-semibold text-navy underline">
-              Open sessions
-            </Link>
-          ) : null}
-        </Card>
+        {nextSession ? (
+          <PressableCard href="/app/sessions">
+            <p className="text-xs uppercase tracking-wide text-muted">Next session</p>
+            <p className="mt-2 font-medium">
+              {new Date(nextSession.scheduled_at).toLocaleString()} ·{" "}
+              {nextSession.modality === "chat" ? "Chat" : "Meet"}
+            </p>
+            <p className="mt-3 text-sm font-semibold text-navy">Open sessions →</p>
+          </PressableCard>
+        ) : (
+          <Card>
+            <p className="text-xs uppercase tracking-wide text-muted">Next session</p>
+            <p className="mt-2 font-medium">Waiting for your professional to schedule</p>
+          </Card>
+        )}
       </div>
 
       <section>
-        <div className="flex items-end justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="font-display text-2xl">Nuggets from your professional</h2>
             <p className="mt-1 text-sm text-muted">Short skills and encouragement unlocked after you subscribe.</p>
           </div>
-          <Link href="/app/nuggets" className="text-sm font-semibold text-navy underline">
-            See all
-          </Link>
+          <NavButton href="/app/nuggets">See all</NavButton>
         </div>
         <div className="mt-4 space-y-3">
           {nuggets.length === 0 ? (
             <p className="text-sm text-muted">No nuggets yet — check back soon.</p>
           ) : (
             nuggets.map((n) => (
-              <Card key={n.id}>
+              <PressableCard key={n.id} href="/app/nuggets">
                 <p className="text-xs text-muted">{n.author}</p>
                 <h3 className="mt-1 font-semibold">{n.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{n.body}</p>
-              </Card>
+              </PressableCard>
             ))
           )}
         </div>
       </section>
-
-      <div className="flex flex-wrap gap-3 text-sm">
-        <Link href="/app/sessions" className="font-semibold text-navy">
-          Sessions
-        </Link>
-        <Link href="/app/groups" className="font-semibold text-navy">
-          Peer groups
-        </Link>
-        <Link href="/app/nuggets" className="font-semibold text-navy">
-          Nuggets
-        </Link>
-      </div>
     </div>
   );
 }

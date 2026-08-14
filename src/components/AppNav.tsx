@@ -44,7 +44,10 @@ export function AppNav({
           <Logo inverted />
           <nav className="flex flex-1 flex-wrap gap-1">
             {links.map(([href, label]) => {
-              const active = path === href || (href !== "/app" && href !== "/pro" && path.startsWith(href));
+              const active =
+                path === href ||
+                (href === "/app/match" && (path.startsWith("/app/match") || path.startsWith("/app/subscribe"))) ||
+                (href !== "/app" && href !== "/pro" && href !== "/app/match" && path.startsWith(href));
               return (
                 <Link
                   key={href}

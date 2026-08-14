@@ -78,11 +78,17 @@ function ProfessionalSignup() {
       </form>
       <p className="mt-6 text-sm text-muted">
         Students sign up through the questionnaire.{" "}
-        <Link href="/signup" className="font-semibold text-navy underline">
+        <Link
+          href="/signup"
+          className="inline-flex cursor-pointer rounded-full border border-navy/20 px-3 py-1 text-sm font-semibold text-navy hover:bg-sky-soft"
+        >
           Student signup
         </Link>
         {" · "}
-        <Link href="/login" className="font-semibold text-navy underline">
+        <Link
+          href="/login"
+          className="inline-flex cursor-pointer rounded-full border border-navy/20 px-3 py-1 text-sm font-semibold text-navy hover:bg-sky-soft"
+        >
           Log in
         </Link>
       </p>

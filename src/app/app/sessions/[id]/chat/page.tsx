@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { BackButton, NavButton } from "@/components/NavControls";
 import { Card, PrimaryButton, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 
@@ -87,25 +87,22 @@ export default function SessionChatPage() {
 
   if (error && !ready) {
     return (
-      <div>
+      <div className="space-y-4">
+        <BackButton href="/app/sessions" label="Sessions" />
         <p className="text-danger">{error}</p>
-        <Link href="/app/sessions" className="mt-4 inline-block text-sm font-semibold text-navy underline">
-          Back to sessions
-        </Link>
       </div>
     );
   }
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col" style={{ minHeight: "70vh" }}>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl">Chat session</h1>
+          <BackButton href="/app/sessions" label="Sessions" />
+          <h1 className="font-display mt-2 text-3xl">Chat session</h1>
           <p className="mt-1 text-sm text-muted">Secure messaging with your professional for this slot.</p>
         </div>
-        <Link href="/app/sessions" className="text-sm font-semibold text-navy underline">
-          All sessions
-        </Link>
+        <NavButton href="/app/sessions">All sessions</NavButton>
       </div>
       <Card className="mt-6 flex flex-1 flex-col p-0">
         <div className="flex-1 space-y-3 overflow-y-auto p-4" style={{ maxHeight: "50vh" }}>
