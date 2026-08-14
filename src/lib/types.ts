@@ -97,6 +97,8 @@ export type Subscription = {
   status: "pending" | "active" | "cancelled";
   plan: string;
   started_at: string;
+  session_type?: "chat" | "video" | null;
+  meet_url?: string | null;
 };
 
 export type CarePlan = {

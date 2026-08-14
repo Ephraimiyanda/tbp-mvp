@@ -86,6 +86,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: subError?.message ?? "Could not subscribe" }, { status: 400 });
     }
 
+    await admin
+      .from("subscriptions")
+      .update({ session_type: modality })
+      .eq("id", sub.id);
+
     if (match?.id) {
       await admin.from("matches").update({ status: "subscribed" }).eq("id", match.id);
     }

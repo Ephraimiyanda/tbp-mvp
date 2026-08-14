@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PrimaryButton } from "@/components/Ui";
 
@@ -10,7 +10,6 @@ export function JoinSessionButton({
   sessionId,
   scheduledAt,
   alreadyReleased,
-  modality = "video",
 }: {
   sessionId: string;
   scheduledAt: string;
@@ -18,6 +17,8 @@ export function JoinSessionButton({
   modality?: "video" | "chat";
 }) {
   const router = useRouter();
+  const path = usePathname();
+  const basePath = path.startsWith("/pro") ? "/pro" : "/app";
   const [now, setNow] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,39 +36,15 @@ export function JoinSessionButton({
     setBusy(true);
     setError(null);
     try {
-      if (modality === "chat") {
-        const res = await fetch(`/api/sessions/${sessionId}/join`, { method: "POST" });
-        const json = (await res.json()) as { url?: string; error?: string };
-        if (!res.ok) {
-          setError(json.error ?? "Chat opens at session time.");
-          return;
-        }
-        router.push(`/app/sessions/${sessionId}/chat`);
-        return;
-      }
-
-      const res = await fetch(`/api/sessions/${sessionId}/join`, { method: "POST" });
-      const json = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !json.url || json.url.startsWith("chat:")) {
-        setError(json.error ?? "The Meet link is not available yet.");
-        return;
-      }
-      window.open(json.url, "_blank", "noopener,noreferrer");
+      router.push(`${basePath}/sessions/${sessionId}`);
     } catch {
-      setError(modality === "chat" ? "Could not open chat." : "Could not open Meet.");
+      setError("Could not open session.");
     } finally {
       setBusy(false);
     }
   }
 
-  const label =
-    modality === "chat"
-      ? open
-        ? "Open chat session"
-        : `Chat opens ${formatRemaining(remaining)}`
-      : open
-        ? "Join Google Meet"
-        : `Opens ${formatRemaining(remaining)}`;
+  const label = open ? "Open Session" : `Opens ${formatRemaining(remaining)}`;
 
   return (
     <div className="text-right">

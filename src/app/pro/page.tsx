@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/Ui";
+import { PressableCard } from "@/components/NavControls";
 import { createClient } from "@/lib/supabase/client";
 import { concernLabel, type CarePlan, type Profile, type Subscription } from "@/lib/types";
 
@@ -41,20 +41,22 @@ export default function ProHome() {
     <div>
       <h1 className="font-display text-3xl">Clients</h1>
       <p className="mt-2 text-sm text-muted">
-        Students appear here after they subscribe. Schedule sessions from the schedule tab. Notes
-        you write stay private to you.
+        Students appear here after they subscribe. Open a client to set chat vs video, then send a
+        Care Loop plan after each session.
       </p>
       <div className="mt-6 space-y-3">
         {clients.length === 0 ? <p className="text-muted">No subscribers yet.</p> : null}
         {clients.map((c) => (
-          <Card key={c.id}>
+          <PressableCard key={c.id} href={`/pro/clients/${c.student_id}`}>
             <p className="font-semibold">{c.student?.full_name ?? "Student"}</p>
             <p className="text-sm text-muted">
               {c.carePlan
                 ? `${concernLabel(c.carePlan.primary_issue)} · ${c.carePlan.duration_weeks} weeks · ${c.carePlan.session_target} sessions`
                 : "Student plan"}
+              {c.session_type ? ` · ${c.session_type === "chat" ? "Chat" : "Video"}` : ""}
             </p>
-          </Card>
+            <p className="mt-3 text-sm font-semibold text-navy">Open client →</p>
+          </PressableCard>
         ))}
       </div>
     </div>

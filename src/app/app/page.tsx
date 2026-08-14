@@ -3,9 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { CareTabs, NavButton, PressableCard } from "@/components/NavControls";
+import { JoinSessionButton } from "@/components/JoinSessionButton";
 import { PageLoading } from "@/components/PageLoading";
+import { ProgressLine } from "@/components/ProgressLine";
 import { Card } from "@/components/Ui";
 import { HeroMatch } from "@/components/illustrations";
+import { progressRatio, type LoopPlan } from "@/lib/care-loop";
 import { createClient } from "@/lib/supabase/client";
 import {
   CARE_PLANS,
@@ -28,6 +31,7 @@ function StudentHomeInner() {
     { profile_id: string; credentials: string | null; profiles?: { full_name: string } | null }[]
   >([]);
   const [demoGroups, setDemoGroups] = useState<{ id: string; name: string; description: string | null }[]>([]);
+  const [loopPlan, setLoopPlan] = useState<LoopPlan | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -79,6 +83,11 @@ function StudentHomeInner() {
             author: proName,
           })),
         );
+        const loopRes = await fetch("/api/loop/plans");
+        if (loopRes.ok) {
+          const loopJson = (await loopRes.json()) as { plan?: LoopPlan | null };
+          setLoopPlan(loopJson.plan ?? null);
+        }
       } else {
         const res = await fetch("/api/directory");
         if (res.ok) {
@@ -183,14 +192,21 @@ function StudentHomeInner() {
           </p>
         </Card>
         {nextSession ? (
-          <PressableCard href="/app/sessions">
+          <Card>
             <p className="text-xs uppercase tracking-wide text-muted">Next session</p>
             <p className="mt-2 font-medium">
               {new Date(nextSession.scheduled_at).toLocaleString()} ·{" "}
-              {nextSession.modality === "chat" ? "Chat" : "Meet"}
+              {nextSession.modality === "chat" ? "Chat" : "Video"}
             </p>
-            <p className="mt-3 text-sm font-semibold text-navy">Open sessions →</p>
-          </PressableCard>
+            <div className="mt-3">
+              <JoinSessionButton
+                sessionId={nextSession.id}
+                scheduledAt={nextSession.scheduled_at}
+                alreadyReleased={Boolean(nextSession.meet_released_at)}
+                modality={nextSession.modality === "chat" ? "chat" : "video"}
+              />
+            </div>
+          </Card>
         ) : (
           <Card>
             <p className="text-xs uppercase tracking-wide text-muted">Next session</p>
@@ -198,6 +214,38 @@ function StudentHomeInner() {
           </Card>
         )}
       </div>
+
+      <section>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-display text-2xl">Between sessions</h2>
+            <p className="mt-1 text-sm text-muted">
+              Your Care Loop — exercises to complete before the next meeting.
+            </p>
+          </div>
+          <NavButton href="/app/plan">Open plan</NavButton>
+        </div>
+        <div className="mt-4">
+          {loopPlan ? (
+            <PressableCard href="/app/plan">
+              <p className="font-medium">{loopPlan.title}</p>
+              <div className="mt-3">
+                <ProgressLine
+                  done={progressRatio(loopPlan.exercises).done}
+                  total={progressRatio(loopPlan.exercises).total}
+                />
+              </div>
+              <p className="mt-3 text-sm font-semibold text-navy">Continue exercises →</p>
+            </PressableCard>
+          ) : (
+            <Card>
+              <p className="text-sm text-muted">
+                No follow-up plan yet. After a session, your professional will publish exercises here.
+              </p>
+            </Card>
+          )}
+        </div>
+      </section>
 
       <section>
         <div className="flex flex-wrap items-end justify-between gap-3">

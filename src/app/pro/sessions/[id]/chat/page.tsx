@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { SessionChat } from "@/components/SessionChat";
 
-export default function SessionChatPage() {
+export default function ProSessionChatPage() {
   const { id } = useParams<{ id: string }>();
-  return <SessionChat sessionId={id} basePath="/app" />;
+  return <SessionChat sessionId={id} basePath="/pro" />;
 }

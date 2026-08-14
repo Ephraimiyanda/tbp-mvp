@@ -37,8 +37,7 @@ export default function StudentSessions() {
       <BackButton href="/app" label="Home" />
       <h1 className="font-display mt-3 text-3xl">Sessions</h1>
       <p className="mt-2 max-w-xl text-sm text-muted">
-        After you pay and subscribe, your first session is scheduled from your preference — secure chat or
-        Google Meet video. Join when the time arrives.
+        One button opens the room your professional set — chat or video. Join when the time arrives.
       </p>
       <div className="mt-6 space-y-3">
         {sessions.length === 0 ? <p className="text-muted">No sessions scheduled yet.</p> : null}
@@ -47,7 +46,7 @@ export default function StudentSessions() {
             <div>
               <p className="font-medium">{new Date(s.scheduled_at).toLocaleString()}</p>
               <p className="text-sm text-muted">
-                {s.duration_min} minutes · {s.modality === "chat" ? "Chat" : "Google Meet"}
+                {s.duration_min} minutes · {s.modality === "chat" ? "Chat" : "Video"}
               </p>
             </div>
             <JoinSessionButton

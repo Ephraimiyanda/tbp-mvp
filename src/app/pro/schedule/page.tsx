@@ -44,6 +44,17 @@ export default function ProSchedule() {
     void reload();
   }, []);
 
+  useEffect(() => {
+    const sub = clients.find((c) => c.student_id === studentId);
+    if (!sub) return;
+    if (sub.session_type === "chat" || sub.session_type === "video") {
+      setModality(sub.session_type);
+      if (sub.session_type === "video" && sub.meet_url) setMeet(sub.meet_url);
+    } else {
+      setModality("auto");
+    }
+  }, [studentId, clients]);
+
   async function schedule(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -85,6 +96,7 @@ export default function ProSchedule() {
       <div>
         <h1 className="font-display text-3xl">Schedule a session</h1>
         <p className="mt-2 text-sm text-muted">
+          Defaults to the chat or video type you set on the client. You can still override per session.
           If Google Calendar is connected, Myalo mints a Meet link. Otherwise paste one. The student
           cannot open it until the scheduled time.
         </p>
@@ -110,7 +122,7 @@ export default function ProSchedule() {
               value={modality}
               onChange={(e) => setModality(e.target.value as "video" | "chat" | "auto")}
             >
-              <option value="auto">Match student preference</option>
+              <option value="auto">Use match session type</option>
               <option value="video">Google Meet video</option>
               <option value="chat">Secure chat</option>
             </select>
@@ -144,7 +156,7 @@ export default function ProSchedule() {
               {s.notes_professional ? (
                 <p className="mt-2 text-sm italic text-muted">Note: {s.notes_professional}</p>
               ) : null}
-              <div className="mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <JoinSessionButton
                   sessionId={s.id}
                   scheduledAt={s.scheduled_at}

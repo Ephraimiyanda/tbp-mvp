@@ -20,12 +20,14 @@ export function AppNav({
       ? [
           ["/pro", "Clients"],
           ["/pro/schedule", "Schedule"],
+          ["/pro/sessions", "Sessions"],
           ["/pro/nuggets", "Nuggets"],
           ["/pro/groups", "Groups"],
         ]
       : [
           ["/app", "Home"],
           ["/app/match", "Match"],
+          ["/app/plan", "Plan"],
           ["/app/sessions", "Sessions"],
           ["/app/groups", "Groups"],
           ["/app/nuggets", "Nuggets"],
@@ -46,6 +48,7 @@ export function AppNav({
             {links.map(([href, label]) => {
               const active =
                 path === href ||
+                (href === "/pro" && path.startsWith("/pro/clients")) ||
                 (href === "/app/match" &&
                   (path.startsWith("/app/match") || path.startsWith("/app/subscribe"))) ||
                 (href !== "/app" && href !== "/pro" && href !== "/app/match" && path.startsWith(href));
