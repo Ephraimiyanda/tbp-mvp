@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { seedDemoContent } from "@/lib/seed-demo";
 
 /**
- * Seeds live mock professionals, nuggets, and peer communities.
+ * Seeds live mock professionals, matched students, Care Loop plans, nuggets, and communities.
  * Requires SUPABASE_SERVICE_ROLE_KEY. Idempotent.
  */
 export async function POST() {

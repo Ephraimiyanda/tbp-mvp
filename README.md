@@ -46,7 +46,18 @@ With `SUPABASE_SERVICE_ROLE_KEY` set:
 npm run seed:demo
 ```
 
-Or `POST /api/demo/seed`. Creates three professionals (password `DemoPass123!`), their nuggets, and three peer communities.
+Or `POST /api/demo/seed`. Creates three professionals, three matched students with Care Loop plans, nuggets, and three peer communities. Password for every demo account: `DemoPass123!`.
+
+| Role | Name | Email | Care Loop |
+|---|---|---|---|
+| Professional | Ada Okonkwo | `ada.okonkwo@myalo.demo` | Amara’s exam-season plan |
+| Professional | Chidi Mensah | `chidi.mensah@myalo.demo` | Tunde’s small-wins plan |
+| Professional | Zainab Adeyemi | `zainab.ade@myalo.demo` | Kemi’s pace-and-boundary plan |
+| Student | Amara Bello | `amara.bello@myalo.demo` | 3/5 done, one “I’m stuck” flag |
+| Student | Tunde Okafor | `tunde.okafor@myalo.demo` | Video match, 2/4 done |
+| Student | Kemi Adewale | `kemi.adewale@myalo.demo` | 1/4 done, boundary assist flag |
+
+The seed is idempotent. It also attaches a mock plan to any other active student (so a live subscribed account can demo immediately). Each pair has a completed session with a published plan plus an **Open Session** slot that is already unlocked.
 
 Also run `supabase/migrations/20260814_demo_sessions_pay.sql` in the SQL editor for chat sessions and mock payments.
 
