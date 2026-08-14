@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PrimaryButton } from "@/components/Ui";
@@ -75,14 +74,6 @@ export function JoinSessionButton({
       <PrimaryButton onClick={() => void join()} disabled={busy || !open}>
         {busy ? "Opening…" : label}
       </PrimaryButton>
-      {modality === "chat" && open ? (
-        <p className="mt-2 text-xs text-muted">
-          Or{" "}
-          <Link href={`/app/sessions/${sessionId}/chat`} className="font-semibold text-navy underline">
-            go to chat
-          </Link>
-        </p>
-      ) : null}
       {error ? <p className="mt-2 max-w-xs text-sm text-danger">{error}</p> : null}
     </div>
   );

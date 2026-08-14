@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BackButton, PressableCard } from "@/components/NavControls";
 import { Card, Field, OptionButton, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import { CONCERNS, type Checkin, type GroupMember, type GroupRow } from "@/lib/types";
@@ -50,7 +51,10 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
             check-ins stay personal.
           </p>
         </div>
-        <Link href={`${basePath}/groups/new`} className="cursor-pointer rounded-full bg-navy px-4 py-2 text-sm font-semibold text-paper hover:bg-navy-soft">
+        <Link
+          href={`${basePath}/groups/new`}
+          className="cursor-pointer rounded-full bg-navy px-4 py-2 text-sm font-semibold text-paper hover:bg-navy-soft"
+        >
           Create a group
         </Link>
       </div>
@@ -61,7 +65,7 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
       ) : null}
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         {groups.map((g) => (
-          <Card key={g.id}>
+          <PressableCard key={g.id} href={`${basePath}/groups/${g.id}`}>
             <p className="text-xs uppercase text-muted">{g.tags.join(" · ") || "open"}</p>
             <h2 className="mt-1 font-display text-xl">{g.name}</h2>
             <p className="mt-2 text-sm text-muted">{g.description}</p>
@@ -69,10 +73,8 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
               {g.count}/{g.member_cap} members
               {mine.includes(g.id) ? " · you’re in" : ""}
             </p>
-            <Link href={`${basePath}/groups/${g.id}`} className="mt-3 inline-block text-sm font-semibold text-navy">
-              Open
-            </Link>
-          </Card>
+            <p className="mt-3 text-sm font-semibold text-navy">Open →</p>
+          </PressableCard>
         ))}
       </div>
     </div>
@@ -109,9 +111,10 @@ export function GroupCreate({ basePath }: { basePath: "/app" | "/pro" }) {
   }
 
   return (
-    <div className="max-w-xl">
+    <div className="max-w-xl space-y-4">
+      <BackButton href={`${basePath}/groups`} label="Groups" />
       <h1 className="font-display text-3xl">New group</h1>
-      <p className="mt-2 text-sm text-muted">You become the admin. Members can join until the cap is reached.</p>
+      <p className="text-sm text-muted">You become the admin. Members can join until the cap is reached.</p>
       <div className="mt-6 space-y-4">
         <Field label="Name">
           <TextInput value={name} onChange={(e) => setName(e.target.value)} />
@@ -214,11 +217,9 @@ export function GroupDetail({
   const growth = checkins.slice(-8);
 
   return (
-    <div className="max-w-2xl">
-      <Link href={`${basePath}/groups`} className="text-sm text-muted">
-        ← Groups
-      </Link>
-      <h1 className="font-display mt-3 text-3xl">{group.name}</h1>
+    <div className="max-w-2xl space-y-3">
+      <BackButton href={`${basePath}/groups`} label="Groups" />
+      <h1 className="font-display text-3xl">{group.name}</h1>
       <p className="mt-2 text-sm text-muted">{group.description}</p>
       <p className="mt-2 text-sm">
         {members.length}/{group.member_cap} members{admin ? " · you admin this group" : ""}

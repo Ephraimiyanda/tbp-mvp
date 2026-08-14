@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { JoinSessionButton } from "@/components/JoinSessionButton";
+import { BackButton } from "@/components/NavControls";
 import { Card } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import type { SessionRow } from "@/lib/types";
@@ -25,7 +26,8 @@ export default function StudentSessions() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl">Sessions</h1>
+      <BackButton href="/app" label="Home" />
+      <h1 className="font-display mt-3 text-3xl">Sessions</h1>
       <p className="mt-2 max-w-xl text-sm text-muted">
         After you pay and subscribe, your first session is scheduled from your preference — secure chat or
         Google Meet video. Join when the time arrives.

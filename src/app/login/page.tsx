@@ -72,11 +72,17 @@ function LoginForm() {
       </form>
       <p className="mt-6 text-sm text-muted">
         New here?{" "}
-        <Link href="/signup" className="font-semibold text-navy underline">
+        <Link
+          href="/signup"
+          className="inline-flex cursor-pointer rounded-full border border-navy/20 px-3 py-1 text-sm font-semibold text-navy hover:bg-sky-soft"
+        >
           Sign up
         </Link>
         {" · "}
-        <Link href="/signup?role=professional" className="font-semibold text-navy underline">
+        <Link
+          href="/signup?role=professional"
+          className="inline-flex cursor-pointer rounded-full border border-navy/20 px-3 py-1 text-sm font-semibold text-navy hover:bg-sky-soft"
+        >
           Professional signup
         </Link>
       </p>

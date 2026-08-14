@@ -542,7 +542,10 @@ function StepBody({
           </p>
           <p className="mt-2 text-sm">
             Already have an account?{" "}
-            <Link href="/login?next=/signup" className="font-semibold text-navy underline">
+            <Link
+              href="/login?next=/signup"
+              className="inline-flex cursor-pointer rounded-full border border-navy/20 px-3 py-1 text-sm font-semibold text-navy hover:bg-sky-soft"
+            >
               Log in
             </Link>
           </p>

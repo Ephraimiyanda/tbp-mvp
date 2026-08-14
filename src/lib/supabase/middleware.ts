@@ -38,5 +38,49 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirect);
   }
 
+  if (user && (path === "/login" || path === "/get-started")) {
+    return redirectAuthedAway(request, supabase, user.id);
+  }
+
+  if (user && path === "/signup") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, consented_at")
+      .eq("id", user.id)
+      .maybeSingle();
+    // Incomplete signup may still need the questionnaire.
+    if (profile?.consented_at) {
+      return redirectAuthedAway(request, supabase, user.id, profile.role);
+    }
+  }
+
   return response;
+}
+
+async function redirectAuthedAway(
+  request: NextRequest,
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+  knownRole?: string | null,
+) {
+  let role = knownRole;
+  if (role === undefined) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, consented_at")
+      .eq("id", userId)
+      .maybeSingle();
+    role = profile?.role;
+    if (role === "professional" && !profile?.consented_at) {
+      const redirect = request.nextUrl.clone();
+      redirect.pathname = "/onboarding";
+      redirect.search = "";
+      return NextResponse.redirect(redirect);
+    }
+  }
+
+  const redirect = request.nextUrl.clone();
+  redirect.pathname = role === "professional" ? "/pro" : "/app";
+  redirect.search = "";
+  return NextResponse.redirect(redirect);
 }

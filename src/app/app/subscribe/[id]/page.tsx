@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BackButton, CareTabs } from "@/components/NavControls";
 import { PaystackMockCheckout } from "@/components/PaystackMockCheckout";
 import { Card, PrimaryButton } from "@/components/Ui";
 import { DEMO_PLAN_AMOUNT_KOBO } from "@/lib/demo-data";
@@ -24,6 +24,19 @@ export default function SubscribePage() {
     void (async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
+
+      const { data: activeSub } = await supabase
+        .from("subscriptions")
+        .select("id")
+        .eq("student_id", auth.user.id)
+        .eq("status", "active")
+        .limit(1)
+        .maybeSingle();
+      if (activeSub) {
+        router.replace("/app");
+        return;
+      }
+
       const res = await fetch(`/api/directory/${id}`);
       const json = (await res.json().catch(() => ({}))) as {
         error?: string;
@@ -47,7 +60,7 @@ export default function SubscribePage() {
         setCommunication(row.communication);
       }
     })();
-  }, [id]);
+  }, [id, router]);
 
   async function completePayment(reference: string) {
     setBusy(true);
@@ -64,7 +77,7 @@ export default function SubscribePage() {
       });
       const json = (await res.json()) as { error?: string; modality?: string };
       if (!res.ok) throw new Error(json.error || "Could not complete payment");
-      router.push(`/app?paid=1&modality=${json.modality ?? "video"}`);
+      router.replace(`/app?paid=1&modality=${json.modality ?? "video"}`);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not complete payment");
@@ -73,7 +86,31 @@ export default function SubscribePage() {
     }
   }
 
-  if (error && !pro) return <p className="text-danger">{error}</p>;
+  async function seeSomeoneElse() {
+    const supabase = createClient();
+    const { data: auth } = await supabase.auth.getUser();
+    if (auth.user && id) {
+      await supabase.from("matches").upsert(
+        {
+          student_id: auth.user.id,
+          professional_id: id,
+          status: "declined",
+          reasons: [],
+        },
+        { onConflict: "student_id,professional_id" },
+      );
+    }
+    router.replace("/app/match");
+  }
+
+  if (error && !pro) {
+    return (
+      <div className="mx-auto max-w-xl space-y-4">
+        <BackButton href="/app" label="Home" />
+        <p className="text-danger">{error}</p>
+      </div>
+    );
+  }
   if (!pro || !plan) return <p className="text-muted">Loading…</p>;
   const name = pro.profiles?.full_name ?? "Professional";
   const naira = (DEMO_PLAN_AMOUNT_KOBO / 100).toLocaleString("en-NG", {
@@ -82,17 +119,27 @@ export default function SubscribePage() {
     maximumFractionDigits: 0,
   });
   const sessionKind =
-    communication === "message" ? "Secure chat sessions" : communication === "mix" ? "Mix of chat and video" : "Google Meet video sessions";
+    communication === "message"
+      ? "Secure chat sessions"
+      : communication === "mix"
+        ? "Mix of chat and video"
+        : "Google Meet video sessions";
 
   return (
-    <div className="mx-auto max-w-xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Start care</p>
-      <h1 className="font-display mt-2 text-4xl font-light">Pay to begin this programme</h1>
-      <p className="mt-3 text-sm leading-6 text-muted">
-        After a successful payment, {name.split(" ")[0]} is reserved for you, your first session is scheduled,
-        and their nuggets unlock. This demo uses Paystack test mode — no real charge.
-      </p>
-      <Card className="mt-8 p-6">
+    <div className="mx-auto max-w-xl space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <BackButton href="/app" label="Home" />
+        <CareTabs />
+      </div>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Start care</p>
+        <h1 className="font-display mt-2 text-4xl font-light">Pay to begin this programme</h1>
+        <p className="mt-3 text-sm leading-6 text-muted">
+          After a successful payment, {name.split(" ")[0]} is reserved for you, your first session is
+          scheduled, and their nuggets unlock. This demo uses Paystack test mode — no real charge.
+        </p>
+      </div>
+      <Card className="p-6">
         <div className="flex gap-4">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-lg text-paper">
             {initials(name)}
@@ -123,11 +170,15 @@ export default function SubscribePage() {
           </div>
         </dl>
       </Card>
-      {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
-      <div className="mt-8 flex items-center justify-between gap-4">
-        <Link href="/app/match" className="cursor-pointer text-sm font-medium text-muted hover:text-navy">
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
+      <div className="flex items-center justify-between gap-4">
+        <button
+          type="button"
+          onClick={() => void seeSomeoneElse()}
+          className="cursor-pointer text-sm font-medium text-muted hover:text-navy"
+        >
           See someone else
-        </Link>
+        </button>
         <PrimaryButton onClick={() => setCheckoutOpen(true)} disabled={busy}>
           {busy ? "Confirming…" : `Pay ${naira} with Paystack`}
         </PrimaryButton>
