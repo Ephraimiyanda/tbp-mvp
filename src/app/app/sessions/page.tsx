@@ -3,26 +3,34 @@
 import { useEffect, useState } from "react";
 import { JoinSessionButton } from "@/components/JoinSessionButton";
 import { BackButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import type { SessionRow } from "@/lib/types";
 
 export default function StudentSessions() {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
     void (async () => {
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return;
+      if (!auth.user) {
+        setLoading(false);
+        return;
+      }
       const { data } = await supabase
         .from("sessions")
         .select("*")
         .eq("student_id", auth.user.id)
         .order("scheduled_at", { ascending: false });
       setSessions((data as SessionRow[]) ?? []);
+      setLoading(false);
     })();
   }, []);
+
+  if (loading) return <PageLoading label="Loading sessions…" />;
 
   return (
     <div>

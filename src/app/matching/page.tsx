@@ -59,6 +59,10 @@ export default function MatchingPage() {
         <div className="w-full max-w-sm">
           <HeroMatch />
         </div>
+        <span
+          className="mt-6 h-9 w-9 animate-spin rounded-full border-2 border-paper/25 border-t-clay"
+          aria-hidden
+        />
         <h1 className="font-display mt-4 text-3xl font-light">Matching you with a professional…</h1>
         <p className="mt-3 max-w-md text-sm text-paper/75">{LINES[line]}</p>
       </main>

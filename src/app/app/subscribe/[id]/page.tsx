@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, CareTabs } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { PaystackMockCheckout } from "@/components/PaystackMockCheckout";
 import { Card, PrimaryButton } from "@/components/Ui";
 import { DEMO_PLAN_AMOUNT_KOBO } from "@/lib/demo-data";
@@ -25,9 +26,10 @@ export default function SubscribePage() {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
 
+      // Keep subscribe reachable for the open proposal; only bounce if already paid.
       const { data: activeSub } = await supabase
         .from("subscriptions")
-        .select("id")
+        .select("id, professional_id")
         .eq("student_id", auth.user.id)
         .eq("status", "active")
         .limit(1)
@@ -111,7 +113,7 @@ export default function SubscribePage() {
       </div>
     );
   }
-  if (!pro || !plan) return <p className="text-muted">Loading…</p>;
+  if (!pro || !plan) return <PageLoading label="Loading programme…" />;
   const name = pro.profiles?.full_name ?? "Professional";
   const naira = (DEMO_PLAN_AMOUNT_KOBO / 100).toLocaleString("en-NG", {
     style: "currency",

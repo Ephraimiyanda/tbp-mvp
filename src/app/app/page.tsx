@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { CareTabs, NavButton, PressableCard } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card } from "@/components/Ui";
 import { HeroMatch } from "@/components/illustrations";
 import { createClient } from "@/lib/supabase/client";
@@ -93,7 +94,7 @@ function StudentHomeInner() {
     })();
   }, []);
 
-  if (loading) return <p className="text-muted">Loading…</p>;
+  if (loading) return <PageLoading label="Loading your care…" />;
 
   if (!sub) {
     return (
@@ -226,7 +227,7 @@ function StudentHomeInner() {
 
 export default function StudentHome() {
   return (
-    <Suspense fallback={<p className="text-muted">Loading…</p>}>
+    <Suspense fallback={<PageLoading label="Loading your care…" />}>
       <StudentHomeInner />
     </Suspense>
   );

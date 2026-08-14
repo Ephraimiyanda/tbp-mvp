@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BackButton, NavButton } from "@/components/NavControls";
+import { BackButton, CareTabs, NavButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { matchReasons, rankProfessionals } from "@/lib/matching";
 import { createClient } from "@/lib/supabase/client";
 import type { Intake, Professional } from "@/lib/types";
@@ -14,22 +15,39 @@ export default function MatchIndexPage() {
   const [error, setError] = useState<string | null>(null);
   const [hasIntake, setHasIntake] = useState(true);
   const [empty, setEmpty] = useState(false);
+  const [activeProId, setActiveProId] = useState<string | null>(null);
+  const [activeProName, setActiveProName] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(true);
 
   useEffect(() => {
     void (async () => {
       const supabase = createClient();
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return;
+      if (!auth.user) {
+        setResolving(false);
+        return;
+      }
 
       const { data: activeSub } = await supabase
         .from("subscriptions")
-        .select("id")
+        .select("professional_id")
         .eq("student_id", auth.user.id)
         .eq("status", "active")
         .limit(1)
         .maybeSingle();
-      if (activeSub) {
-        router.replace("/app");
+
+      // Already in care — stay on Match (do not bounce to Home).
+      if (activeSub?.professional_id) {
+        const proId = activeSub.professional_id as string;
+        setActiveProId(proId);
+        const res = await fetch(`/api/directory/${proId}`);
+        if (res.ok) {
+          const json = (await res.json()) as { professional?: Professional };
+          setActiveProName(json.professional?.profiles?.full_name ?? "Your professional");
+        } else {
+          setActiveProName("Your professional");
+        }
+        setResolving(false);
         return;
       }
 
@@ -55,6 +73,7 @@ export default function MatchIndexPage() {
         .maybeSingle();
       if (!intakeRow) {
         setHasIntake(false);
+        setResolving(false);
         return;
       }
 
@@ -75,6 +94,7 @@ export default function MatchIndexPage() {
       };
       if (!res.ok) {
         setError(json.error || "Could not load professionals");
+        setResolving(false);
         return;
       }
 
@@ -85,14 +105,41 @@ export default function MatchIndexPage() {
       const top = ranked[0];
       if (!top) {
         setEmpty(true);
+        setResolving(false);
         return;
       }
 
-      // Warm reasons so subscribe can reuse proposed row later
       void matchReasons(intakeRow as Intake, top.professional);
       router.replace(`/app/match/${top.professional.profile_id}`);
     })();
   }, [router]);
+
+  if (activeProId) {
+    return (
+      <div className="mx-auto max-w-xl space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <BackButton href="/app" label="Home" />
+          <CareTabs />
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Already matched</p>
+          <h1 className="font-display mt-2 text-4xl font-light">
+            You’re with {activeProName?.split(" ")[0] ?? "your professional"}
+          </h1>
+          <p className="mt-2 text-sm text-muted">
+            Your programme is active. Open sessions, nuggets, or peer groups from the tabs above — or
+            review their profile below.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <NavButton href={`/app/match/${activeProId}`} variant="primary">
+            View profile
+          </NavButton>
+          <NavButton href="/app">Back to care home</NavButton>
+        </div>
+      </div>
+    );
+  }
 
   if (!hasIntake) {
     return (
@@ -127,5 +174,6 @@ export default function MatchIndexPage() {
     );
   }
 
-  return <p className="text-muted">Finding your match…</p>;
+  if (resolving) return <PageLoading label="Finding your match…" />;
+  return <PageLoading label="Opening your match…" />;
 }

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/components/Logo";
+import { PageLoading } from "@/components/PageLoading";
 import { Field, OptionButton, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
 import { WaveJoin } from "@/components/WaveDivider";
 import { createClient } from "@/lib/supabase/client";
@@ -48,11 +49,15 @@ export function OnboardingClient() {
   }, [router]);
 
   if (!profile) {
-    return <div className="min-h-full bg-paper px-5 py-16 text-muted">{error ?? "Loading…"}</div>;
+    return error ? (
+      <div className="min-h-full bg-paper px-5 py-16 text-center text-danger">{error}</div>
+    ) : (
+      <PageLoading label="Loading your profile…" />
+    );
   }
 
   if (profile.role === "student") {
-    return <div className="min-h-full bg-paper px-5 py-16 text-muted">Taking you to the questionnaire…</div>;
+    return <PageLoading label="Taking you to the questionnaire…" />;
   }
 
   return <ProOnboarding profile={profile} onError={setError} error={error} />;

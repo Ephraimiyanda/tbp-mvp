@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import { PageLoading } from "@/components/PageLoading";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { clearDraft, draftIsReady, loadDraft } from "@/lib/intake-draft";
@@ -92,7 +93,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<PageLoading label="Loading…" />}>
       <LoginForm />
     </Suspense>
   );

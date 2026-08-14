@@ -2,18 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import type { Nugget } from "@/lib/types";
 
 export default function StudentNuggets() {
   const [nuggets, setNuggets] = useState<(Nugget & { author?: string })[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
     void (async () => {
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return;
+      if (!auth.user) {
+        setLoading(false);
+        return;
+      }
       const { data: subs } = await supabase
         .from("subscriptions")
         .select("professional_id")
@@ -22,6 +27,7 @@ export default function StudentNuggets() {
       const proIds = (subs ?? []).map((s) => s.professional_id as string);
       if (!proIds.length) {
         setNuggets([]);
+        setLoading(false);
         return;
       }
       const { data } = await supabase
@@ -45,8 +51,11 @@ export default function StudentNuggets() {
           author: names.get(n.professional_id) ?? "Professional",
         })),
       );
+      setLoading(false);
     })();
   }, []);
+
+  if (loading) return <PageLoading label="Loading nuggets…" />;
 
   return (
     <div>

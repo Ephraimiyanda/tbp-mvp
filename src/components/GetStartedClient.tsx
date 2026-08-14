@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { PageLoading } from "@/components/PageLoading";
 import { Field, OptionButton, PrimaryButton, TextInput } from "@/components/Ui";
 import { UniversitySelect } from "@/components/UniversitySelect";
 import { WaveJoin } from "@/components/WaveDivider";
@@ -181,11 +182,7 @@ export function GetStartedClient() {
   }
 
   if (!ready) {
-    return (
-      <div className="flex min-h-full flex-col bg-white">
-        <FunnelBar progress={0} />
-      </div>
-    );
+    return <PageLoading label="Loading signup…" />;
   }
 
   const ctaLabel = (() => {

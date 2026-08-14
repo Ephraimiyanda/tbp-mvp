@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, CareTabs, NavButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card, PrimaryButton } from "@/components/Ui";
 import { matchReasons, rankProfessionals } from "@/lib/matching";
 import { createClient } from "@/lib/supabase/client";
@@ -15,6 +16,7 @@ export default function MatchProfessionalPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasIntake, setHasIntake] = useState(true);
+  const [subscribedProId, setSubscribedProId] = useState<string | null>(null);
   const [candidate, setCandidate] = useState<{
     professional: Professional;
     reasons: string[];
@@ -25,7 +27,6 @@ export default function MatchProfessionalPage() {
   useEffect(() => {
     if (!id) return;
     void load(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function load(professionalId: string) {
@@ -37,15 +38,12 @@ export default function MatchProfessionalPage() {
 
     const { data: activeSub } = await supabase
       .from("subscriptions")
-      .select("id")
+      .select("professional_id")
       .eq("student_id", auth.user.id)
       .eq("status", "active")
       .limit(1)
       .maybeSingle();
-    if (activeSub) {
-      router.replace("/app");
-      return;
-    }
+    setSubscribedProId((activeSub?.professional_id as string | undefined) ?? null);
 
     const { data: intakeRow } = await supabase
       .from("intakes")
@@ -104,7 +102,7 @@ export default function MatchProfessionalPage() {
   }
 
   async function propose() {
-    if (!candidate || !id) return;
+    if (!candidate || !id || subscribedProId) return;
     const supabase = createClient();
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return;
@@ -126,6 +124,11 @@ export default function MatchProfessionalPage() {
 
   async function seeSomeoneElse() {
     if (!candidate || !id) return;
+    if (subscribedProId === id) {
+      if (nextId) router.push(`/app/match/${nextId}`);
+      else router.push("/app/match");
+      return;
+    }
     const supabase = createClient();
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return;
@@ -150,7 +153,7 @@ export default function MatchProfessionalPage() {
       </div>
     );
   }
-  if (loading) return <p className="text-muted">Finding your match…</p>;
+  if (loading) return <PageLoading label="Finding your match…" />;
 
   if (!hasIntake) {
     return (
@@ -185,6 +188,8 @@ export default function MatchProfessionalPage() {
 
   const pro = candidate.professional;
   const name = pro.profiles?.full_name ?? "Professional";
+  const isCurrentCare = subscribedProId === id;
+  const alreadyInCare = Boolean(subscribedProId);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
@@ -193,11 +198,24 @@ export default function MatchProfessionalPage() {
         <CareTabs />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">Your match is ready</p>
-        <h1 className="font-display mt-2 text-4xl font-light">Meet {name.split(" ")[0]}</h1>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">
+          {isCurrentCare
+            ? "Your professional"
+            : alreadyInCare
+              ? "Browse professionals"
+              : "Your match is ready"}
+        </p>
+        <h1 className="font-display mt-2 text-4xl font-light">
+          {isCurrentCare ? name : `Meet ${name.split(" ")[0]}`}
+        </h1>
         <p className="mt-2 text-sm text-muted">
-          You can see this person before you subscribe. If it isn’t the right fit, see someone else
-          {poolSize > 1 ? ` (${poolSize} available)` : ""}.
+          {isCurrentCare
+            ? "This is who you’re subscribed to. Use the tabs above for sessions, groups, and nuggets."
+            : alreadyInCare
+              ? "You already have an active programme. You can still browse other profiles."
+              : `You can see this person before you subscribe. If it isn’t the right fit, see someone else${
+                  poolSize > 1 ? ` (${poolSize} available)` : ""
+                }.`}
         </p>
       </div>
       <Card className="p-6">
@@ -229,7 +247,13 @@ export default function MatchProfessionalPage() {
         >
           See someone else
         </button>
-        <PrimaryButton onClick={() => void propose()}>Continue to subscribe</PrimaryButton>
+        {alreadyInCare ? (
+          <NavButton href="/app" variant="primary">
+            Back to care home
+          </NavButton>
+        ) : (
+          <PrimaryButton onClick={() => void propose()}>Continue to subscribe</PrimaryButton>
+        )}
       </div>
       <p className="text-xs text-muted">
         Matching proposes. Subscribing starts the programme.{" "}
