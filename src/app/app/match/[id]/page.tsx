@@ -26,7 +26,6 @@ export default function MatchProfessionalPage() {
   useEffect(() => {
     if (!id) return;
     void load(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function load(professionalId: string) {
