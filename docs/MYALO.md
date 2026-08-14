@@ -17,8 +17,9 @@ This is not a clone of another therapy marketplace. Myalo’s wedge is the peer 
 Sign up / onboarding (questions, one screen at a time) → account at the end
         → matching animation → see the professional → subscribe
         → professional schedules sessions on a care-plan timeline
-        → at session time Myalo releases a Google Meet link
-        → student joins; professional may keep private notes
+        → at session time the student taps Open Session (chat or video)
+        → after the session the professional publishes a Care Loop plan
+        → student works through exercises; AI assist is a bridge if they get stuck
         → professional posts nuggets; subscribers see them
 ```
 
@@ -69,6 +70,16 @@ The longest matching concern wins. Professionals can still pace sessions inside 
 
 ---
 
+## Care Loop
+
+Between sessions, the professional publishes a short exercise plan for that cycle. The student checks items off; a horizontal progress line shows readiness for the next session. Incomplete exercises do not roll over — the next session starts a new plan, and older plans stay as history.
+
+- **Session type** is chosen per match (chat or video, with a meeting link for video) and can be edited later.
+- **Open Session** is one button. Chat opens the in-app room; video opens the attached meeting link at session time.
+- **AI assist** on an exercise is a bridge until the next session, not a replacement for the professional. Sticking points are flagged on the professional’s client page.
+
+---
+
 ## Stack
 
 | Layer | Choice |
@@ -83,5 +94,5 @@ The longest matching concern wins. Professionals can still pace sessions inside 
 
 ## Roles
 
-- **Student** — intake, match, subscribe, join Meet, join/create groups, read nuggets from professionals they subscribe to.
-- **Professional** — profile, accept subscribers, schedule sessions, private notes, nuggets, create/admin groups.
+- **Student** — intake, match, subscribe, open sessions (chat or video), follow a Care Loop plan, join/create groups, read nuggets from professionals they subscribe to.
+- **Professional** — profile, accept subscribers, set chat vs video, schedule sessions, private notes, publish between-session plans, nuggets, create/admin groups.

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, CareTabs, NavButton } from "@/components/NavControls";
 import { PageLoading } from "@/components/PageLoading";
+import { PrimaryButton } from "@/components/Ui";
 import { matchReasons, rankProfessionals } from "@/lib/matching";
 import { createClient } from "@/lib/supabase/client";
 import type { Intake, Professional } from "@/lib/types";
@@ -18,6 +19,7 @@ export default function MatchIndexPage() {
   const [activeProId, setActiveProId] = useState<string | null>(null);
   const [activeProName, setActiveProName] = useState<string | null>(null);
   const [resolving, setResolving] = useState(true);
+  const [rematching, setRematching] = useState(false);
 
   useEffect(() => {
     void (async () => {
@@ -114,6 +116,29 @@ export default function MatchIndexPage() {
     })();
   }, [router]);
 
+  async function rematch() {
+    setRematching(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/match/rematch", { method: "POST" });
+      const json = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        next_professional_id?: string | null;
+      };
+      if (!res.ok) throw new Error(json.error || "Could not rematch");
+      if (!json.next_professional_id) {
+        setActiveProId(null);
+        setEmpty(true);
+        setError(json.error || "No other professionals available right now");
+        return;
+      }
+      router.replace(`/app/match/${json.next_professional_id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not rematch");
+      setRematching(false);
+    }
+  }
+
   if (activeProId) {
     return (
       <div className="mx-auto max-w-xl space-y-6">
@@ -128,15 +153,19 @@ export default function MatchIndexPage() {
           </h1>
           <p className="mt-2 text-sm text-muted">
             Your programme is active. Open sessions, nuggets, or peer groups from the tabs above — or
-            review their profile below.
+            rematch if this isn’t the right fit.
           </p>
         </div>
+        {error ? <p className="text-sm text-danger">{error}</p> : null}
         <div className="flex flex-wrap gap-3">
           <NavButton href={`/app/match/${activeProId}`} variant="primary">
             View profile
           </NavButton>
-          <NavButton href="/app">Back to care home</NavButton>
+          <PrimaryButton onClick={() => void rematch()} disabled={rematching}>
+            {rematching ? "Finding someone else…" : "Rematch with someone else"}
+          </PrimaryButton>
         </div>
+        <NavButton href="/app">Back to care home</NavButton>
       </div>
     );
   }

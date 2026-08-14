@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   const { data: sub } = await supabase
     .from("subscriptions")
-    .select("id, student_id, professional_id, status")
+    .select("id, student_id, professional_id, status, session_type, meet_url")
     .eq("id", body.subscription_id)
     .single();
 
@@ -44,9 +44,11 @@ export async function POST(request: Request) {
   const modality: "video" | "chat" =
     body.modality === "chat" || body.modality === "video"
       ? body.modality
-      : intake?.communication === "message"
-        ? "chat"
-        : "video";
+      : sub.session_type === "chat" || sub.session_type === "video"
+        ? sub.session_type
+        : intake?.communication === "message"
+          ? "chat"
+          : "video";
 
   const start = new Date(body.scheduled_at);
   const duration = body.duration_min ?? (modality === "chat" ? 40 : 50);
@@ -98,7 +100,7 @@ export async function POST(request: Request) {
     requestId: session.id,
   });
 
-  const meetUrl = minted || body.meet_url?.trim() || pro?.default_meet_url || null;
+  const meetUrl = minted || body.meet_url?.trim() || sub.meet_url || pro?.default_meet_url || null;
   if (!meetUrl) {
     await supabase.from("sessions").delete().eq("id", session.id);
     return NextResponse.json(

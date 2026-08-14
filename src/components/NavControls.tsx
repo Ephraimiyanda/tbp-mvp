@@ -13,7 +13,7 @@ export function BackButton({
 }) {
   const router = useRouter();
   const className =
-    "inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-muted transition hover:text-navy";
+    "inline-flex cursor-pointer items-center gap-1 rounded-xl bg-white px-3 py-1.5 text-sm font-semibold text-navy shadow-md ring-1 ring-navy/10 transition hover:bg-sky-soft hover:shadow-lg";
 
   if (href) {
     return (
@@ -82,6 +82,7 @@ export function CareTabs({ className = "" }: { className?: string }) {
   return (
     <nav className={`flex flex-wrap gap-2 ${className}`} aria-label="Care sections">
       <NavButton href="/app/sessions">Sessions</NavButton>
+      <NavButton href="/app/plan">Plan</NavButton>
       <NavButton href="/app/groups">Peer groups</NavButton>
       <NavButton href="/app/nuggets">Nuggets</NavButton>
     </nav>

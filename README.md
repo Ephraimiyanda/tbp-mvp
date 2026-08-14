@@ -34,9 +34,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Sign up once as a **student** (start at `/signup` — questionnaire during onboarding, account last) and once as a **professional** (`/signup?role=professional`, different emails). Subscribe as the student, then schedule a session as the professional.
 
-## 3. Meet links (no cron)
+3. **Meet links (no cron)**
 
-Hobby Vercel cannot run frequent crons, so Myalo does not use a scheduler. When the student or professional taps **Join Google Meet** at session time, `/api/sessions/[id]/join` checks the clock, releases the stored URL, and opens Meet. Until then the link stays hidden in `session_meet_links`.
+Hobby Vercel cannot run frequent crons, so Myalo does not use a scheduler. When the student or professional taps **Open Session** at session time, `/api/sessions/[id]/join` checks the clock and either opens in-app chat or releases the stored Meet URL. Until then the link stays hidden in `session_meet_links`.
 
 ## 4. Demo seed (live mock professionals + communities)
 
@@ -51,6 +51,8 @@ Or `POST /api/demo/seed`. Creates three professionals (password `DemoPass123!`),
 Also run `supabase/migrations/20260814_demo_sessions_pay.sql` in the SQL editor for chat sessions and mock payments.
 
 Also run `supabase/migrations/20260815_fix_rls_helpers.sql` so helper functions are `SECURITY DEFINER` (fixes stack-depth errors when loading professionals with names or group members).
+
+Also run `supabase/migrations/20260816_care_loop.sql` for Care Loop (between-session exercise plans, chat vs video per match, and AI-assist flags).
 
 ## Product
 
