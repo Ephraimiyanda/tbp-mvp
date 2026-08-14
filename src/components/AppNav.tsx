@@ -46,7 +46,8 @@ export function AppNav({
             {links.map(([href, label]) => {
               const active =
                 path === href ||
-                (href === "/app/match" && (path.startsWith("/app/match") || path.startsWith("/app/subscribe"))) ||
+                (href === "/app/match" &&
+                  (path.startsWith("/app/match") || path.startsWith("/app/subscribe"))) ||
                 (href !== "/app" && href !== "/pro" && href !== "/app/match" && path.startsWith(href));
               return (
                 <Link

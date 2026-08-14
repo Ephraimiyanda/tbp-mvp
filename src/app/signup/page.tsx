@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { GetStartedClient } from "@/components/GetStartedClient";
+import { PageLoading } from "@/components/PageLoading";
 import { AuthShell } from "@/components/SiteChrome";
 import { Field, PrimaryButton, TextInput } from "@/components/Ui";
 import { signupWithoutEmailVerification } from "@/lib/signup";
@@ -98,7 +99,7 @@ function ProfessionalSignup() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-full bg-white px-5 py-16 text-center text-muted">Loading onboarding…</div>}>
+    <Suspense fallback={<PageLoading label="Loading onboarding…" />}>
       <SignupSwitch />
     </Suspense>
   );

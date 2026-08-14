@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, PressableCard } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card, Field, OptionButton, PrimaryButton, TextArea, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 import { CONCERNS, type Checkin, type GroupMember, type GroupRow } from "@/lib/types";
@@ -59,7 +60,7 @@ export function GroupsIndex({ basePath }: { basePath: "/app" | "/pro" }) {
         </Link>
       </div>
       {error ? <p className="mt-6 text-sm text-danger">{error}</p> : null}
-      {loading ? <p className="mt-6 text-sm text-muted">Loading communities…</p> : null}
+      {loading ? <PageLoading label="Loading communities…" /> : null}
       {!loading && !error && groups.length === 0 ? (
         <p className="mt-6 text-sm text-muted">No communities yet. Create one, or ask an admin to run the demo seed.</p>
       ) : null}
@@ -212,7 +213,16 @@ export function GroupDetail({
     }
   }
 
-  if (!group) return <p className="text-muted">{error ?? "Loading…"}</p>;
+  if (!group) {
+    return error ? (
+      <div className="space-y-4">
+        <BackButton href={`${basePath}/groups`} label="Groups" />
+        <p className="text-danger">{error}</p>
+      </div>
+    ) : (
+      <PageLoading label="Loading group…" />
+    );
+  }
 
   const growth = checkins.slice(-8);
 

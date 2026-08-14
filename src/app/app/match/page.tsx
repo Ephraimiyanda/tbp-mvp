@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, CareTabs, NavButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { matchReasons, rankProfessionals } from "@/lib/matching";
 import { createClient } from "@/lib/supabase/client";
 import type { Intake, Professional } from "@/lib/types";
@@ -16,12 +17,16 @@ export default function MatchIndexPage() {
   const [empty, setEmpty] = useState(false);
   const [activeProId, setActiveProId] = useState<string | null>(null);
   const [activeProName, setActiveProName] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(true);
 
   useEffect(() => {
     void (async () => {
       const supabase = createClient();
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return;
+      if (!auth.user) {
+        setResolving(false);
+        return;
+      }
 
       const { data: activeSub } = await supabase
         .from("subscriptions")
@@ -31,19 +36,18 @@ export default function MatchIndexPage() {
         .limit(1)
         .maybeSingle();
 
-      // Already in care — stay on Match and show current professional (do not bounce to Home).
+      // Already in care — stay on Match (do not bounce to Home).
       if (activeSub?.professional_id) {
         const proId = activeSub.professional_id as string;
         setActiveProId(proId);
         const res = await fetch(`/api/directory/${proId}`);
         if (res.ok) {
-          const json = (await res.json()) as {
-            professional?: Professional;
-          };
+          const json = (await res.json()) as { professional?: Professional };
           setActiveProName(json.professional?.profiles?.full_name ?? "Your professional");
         } else {
           setActiveProName("Your professional");
         }
+        setResolving(false);
         return;
       }
 
@@ -69,6 +73,7 @@ export default function MatchIndexPage() {
         .maybeSingle();
       if (!intakeRow) {
         setHasIntake(false);
+        setResolving(false);
         return;
       }
 
@@ -89,6 +94,7 @@ export default function MatchIndexPage() {
       };
       if (!res.ok) {
         setError(json.error || "Could not load professionals");
+        setResolving(false);
         return;
       }
 
@@ -99,6 +105,7 @@ export default function MatchIndexPage() {
       const top = ranked[0];
       if (!top) {
         setEmpty(true);
+        setResolving(false);
         return;
       }
 
@@ -167,5 +174,6 @@ export default function MatchIndexPage() {
     );
   }
 
-  return <p className="text-muted">Finding your match…</p>;
+  if (resolving) return <PageLoading label="Finding your match…" />;
+  return <PageLoading label="Opening your match…" />;
 }

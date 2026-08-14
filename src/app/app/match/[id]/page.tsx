@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackButton, CareTabs, NavButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card, PrimaryButton } from "@/components/Ui";
 import { matchReasons, rankProfessionals } from "@/lib/matching";
 import { createClient } from "@/lib/supabase/client";
@@ -123,7 +124,6 @@ export default function MatchProfessionalPage() {
 
   async function seeSomeoneElse() {
     if (!candidate || !id) return;
-    // Don't decline your active subscribed professional from this control.
     if (subscribedProId === id) {
       if (nextId) router.push(`/app/match/${nextId}`);
       else router.push("/app/match");
@@ -153,7 +153,7 @@ export default function MatchProfessionalPage() {
       </div>
     );
   }
-  if (loading) return <p className="text-muted">Finding your match…</p>;
+  if (loading) return <PageLoading label="Finding your match…" />;
 
   if (!hasIntake) {
     return (
@@ -199,7 +199,11 @@ export default function MatchProfessionalPage() {
       </div>
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ok">
-          {isCurrentCare ? "Your professional" : alreadyInCare ? "Browse professionals" : "Your match is ready"}
+          {isCurrentCare
+            ? "Your professional"
+            : alreadyInCare
+              ? "Browse professionals"
+              : "Your match is ready"}
         </p>
         <h1 className="font-display mt-2 text-4xl font-light">
           {isCurrentCare ? name : `Meet ${name.split(" ")[0]}`}

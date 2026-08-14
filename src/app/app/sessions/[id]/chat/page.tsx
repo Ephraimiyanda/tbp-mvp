@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BackButton, NavButton } from "@/components/NavControls";
+import { PageLoading } from "@/components/PageLoading";
 import { Card, PrimaryButton, TextInput } from "@/components/Ui";
 import { createClient } from "@/lib/supabase/client";
 
@@ -92,6 +93,10 @@ export default function SessionChatPage() {
         <p className="text-danger">{error}</p>
       </div>
     );
+  }
+
+  if (!ready) {
+    return <PageLoading label="Opening chat…" />;
   }
 
   return (
