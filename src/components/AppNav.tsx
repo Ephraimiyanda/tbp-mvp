@@ -63,7 +63,7 @@ export function AppNav({
           <button
             type="button"
             onClick={signOut}
-            className="cursor-pointer rounded-full border border-[#e8b4b4]/35 bg-[#b85c5c]/20 px-3.5 py-1.5 text-sm font-semibold text-[#f3d4d4] transition hover:border-[#e8b4b4]/55 hover:bg-[#b85c5c]/35 hover:text-paper"
+            className="cursor-pointer rounded-full border border-danger/40 bg-danger/25 px-3.5 py-1.5 text-sm font-semibold text-[#f6dede] shadow-sm transition hover:border-danger/60 hover:bg-danger/40 hover:text-paper"
           >
             Log out
           </button>

@@ -25,9 +25,10 @@ export default function SubscribePage() {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
 
+      // Keep subscribe reachable for the open proposal; only bounce if already paid.
       const { data: activeSub } = await supabase
         .from("subscriptions")
-        .select("id")
+        .select("id, professional_id")
         .eq("student_id", auth.user.id)
         .eq("status", "active")
         .limit(1)
