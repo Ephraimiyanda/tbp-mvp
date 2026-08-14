@@ -60,7 +60,11 @@ export function AppNav({
             })}
           </nav>
           <span className="text-sm text-paper/70">{name}</span>
-          <button type="button" onClick={signOut} className="cursor-pointer text-sm text-paper/80 hover:text-paper">
+          <button
+            type="button"
+            onClick={signOut}
+            className="cursor-pointer rounded-full border border-[#e8b4b4]/35 bg-[#b85c5c]/20 px-3.5 py-1.5 text-sm font-semibold text-[#f3d4d4] transition hover:border-[#e8b4b4]/55 hover:bg-[#b85c5c]/35 hover:text-paper"
+          >
             Log out
           </button>
         </div>
